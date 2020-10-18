@@ -93,7 +93,7 @@ const Account = () => {
     }
 
     async function fetchData() {
-        axios.get("http://localhost:3000/api/orders/user", {
+        axios.get("http://localhost:3000/api/user/orders", {
             params: {
                 pageNumber: page,
                 pagination: sizePerPage,
@@ -112,9 +112,9 @@ const Account = () => {
     }
 
     async function fetchUser() {
-        axios.get("http://localhost:3000/api/orders/user/account", {withCredentials: true}).then(res => {
+        axios.get("http://localhost:3000/api/user/account", {withCredentials: true}).then(res => {
             setUser(res.data)
-            console.log(res)
+
         })
             .catch(error => {
                 if (error.response) {
