@@ -1,0 +1,62 @@
+$border-color: #d0d0d0;
+$theme-first-color: #117382;
+$theme-second-color: #BB0001;
+
+
+.main-navbar {
+  @media screen and (min-width: 768px) {
+    &__item:not(:last-child) {
+      border-right: $theme-first-color solid 1px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    &__item{
+      text-align: center;
+    }
+  }
+}
+
+
+.navbar-logo {
+  font-weight: bold;
+  &__image {
+    display: inline-block;
+    vertical-align: middle;
+    background-size: contain;
+    background-position-x: center;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    height: 50px;
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+    background-image: url(https://avatars.mds.yandex.net/get-altay/1971563/2a0000016c1da587fca6083e0f4e0d96b650/h300);
+  }
+}
+
+.main-navbar__item{
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  padding-right: 3rem;
+  padding-left: 3rem;
+  a{
+    text-align: center;
+  }
+  &:before{
+    position: absolute;
+    content: '';
+    bottom: 3%;
+    left: 7%;
+    right: 7%;
+    border: $theme-second-color solid 2px;
+    transition: .2s;
+    transform: scale(0);
+  }
+  &:hover:before{
+    transform: scale(1);
+  }
+}
+
+
+
