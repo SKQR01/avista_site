@@ -4,12 +4,7 @@ import Container from "react-bootstrap/Container"
 import Link from "next/link"
 import Button from "react-bootstrap/Button"
 import axios from "axios"
-<<<<<<< HEAD
-import cookie from "js-cookie"
-import {useEffect} from "react"
-=======
 
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation
 
 const MainNavbar = () => {
 

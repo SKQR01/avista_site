@@ -6,47 +6,13 @@ import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
 import verify from "jsonwebtoken/verify"
 import {secret} from "@utils/secret"
-<<<<<<< HEAD
-=======
 import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation
 
 
 export default apiRoutesHandler(
     withDb({
             GET: callbackHandlerApi([checkAuthentication], async (req, res) => {
                 try {
-<<<<<<< HEAD
-                    // console.log('some cookies', req)
-                    if (req.query.pageNumber && req.query.pagination) {
-                        const userData = await verify(req.cookies.authToken, secret)
-                        const pageNumber = parseInt(req.query.pageNumber)
-                        const pagination = parseInt(req.query.pagination)
-
-
-                        const toSkip = (pageNumber - 1) * pagination
-
-                        const user = await User.findById(userData._id).populate({
-                            path: "orders",
-                            select: '_id title createdAt',
-                            options: {
-                                sort: {createdAt: -1},
-                                skip: toSkip,
-                                perDocumentLimit: pagination
-                            }
-                        })
-
-                        const orders = user.orders
-                        const totalSize = user.orders.length
-
-                        res.json({orders, totalSize})
-                    } else {
-                        res.json({error: "Please, specify the pageNumber and pagination parameters."})
-                    }
-                } catch (e) {
-                    console.log(e)
-                    res.status(500).json([])
-=======
                     const validationSchema = {
                         pageNumber: {
                             callback: [isPresentInObject, isNubmer],
@@ -93,7 +59,6 @@ export default apiRoutesHandler(
                     res.json({success: {payload: {orders:orders, totalSize:totalSize}}})
                 } catch (e) {
                     res.status(500).json({errors: [{name: 'common', message: e.message}]})
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation
                 }
             })
         }

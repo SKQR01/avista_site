@@ -3,26 +3,13 @@ import apiRoutesHandler from "@utils/apiRoutesHandler"
 import Order from '@models/Order'
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerApiFunctions"
-<<<<<<< HEAD
-=======
 import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation
 
 
 export default apiRoutesHandler(
     withDb({
             GET: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res) => {
                 try {
-<<<<<<< HEAD
-                    const pageNumber = parseInt(req.query.pageNumber)
-                    const pagination = parseInt(req.query.pagination)
-
-                    const orders = await Order.find().skip((pageNumber - 1) * pagination).limit(pagination).sort({createdAt: 'desc'}).lean()
-                    const totalSize = await Order.countDocuments()
-                    res.status(200).json({orders, totalSize})
-                } catch (e) {
-                    res.status(500).json([])
-=======
 
                     const validationSchema = {
                         pageNumber: {
@@ -56,7 +43,6 @@ export default apiRoutesHandler(
                     res.json({success: {name: "common", payload:  {orders:orders, totalSize:totalSize}}})
                 } catch (e) {
                     res.status(500).json({errors: [{name: 'common', message: e.message}]})
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation
                 }
             })
         }

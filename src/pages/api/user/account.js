@@ -1,40 +1,12 @@
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-<<<<<<< HEAD
-import Order from '@models/Order'
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
 
-
-
-=======
-import callbackHandlerApi from "@utils/callbackHandlerApi"
-import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
-
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation
 import {verify} from "jsonwebtoken"
 import {secret} from "@utils/secret"
 
 import User from "@models/User"
-<<<<<<< HEAD
-
-
-
-export default apiRoutesHandler(
-    withDb({
-        GET: callbackHandlerApi([checkAuthentication],async (req, res) => {
-            try {
-                const userData = verify(req.cookies.authToken, secret)
-                const user = await User.findById(userData._id)
-                res.json(user)
-            } catch (e) {
-                res.status(500).json({success: false})
-            }
-        }
-        )
-    })
-)
-=======
 import dbErrorCompile from "@utils/dbErrorCompile";
 import validateData from "@validation/validator";
 import {withIronSession} from "next-iron-session";
@@ -82,4 +54,3 @@ export default apiRoutesHandler({
 })
 
 
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation

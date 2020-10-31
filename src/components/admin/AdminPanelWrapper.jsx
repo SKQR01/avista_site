@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-
-const AdminPanelWrapper = ({children}) => {
-    return (
-        <div>
-            {children}
-=======
 import React, {useEffect} from 'react'
 import useAdmin from "@utils/useAdmin"
 import Nav from "react-bootstrap/Nav"
@@ -29,7 +21,6 @@ const AdminPanelWrapper = ({children}) => {
                     Disabled
                 </Nav.Link>
             </Nav>
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation
         </div>
     )
 }

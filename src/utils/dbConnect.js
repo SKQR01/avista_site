@@ -5,27 +5,6 @@ const connection = {
     isConnected: 0
 }
 
-<<<<<<< HEAD
-export async function dbConnect() {
-    if (connection.isConnected) {
-        return
-    }
-    const db = await mongoose.connect(process.env.MONGO_URI, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-        useCreateIndex: true
-    })
-    connection.isConnected = db.connections[0].readyState
-}
-
-export function withDb(handler) {
-    dbConnect()
-    return handler
-}
-
-export default withDb
-=======
 const connectDb = async () => {
     if (connection.isConnected) {
         return
@@ -50,4 +29,3 @@ function withDb(handler) {
 
 export default  withDb
 
->>>>>>> 01314a2... Private routes, SWR, remove orders, validation
