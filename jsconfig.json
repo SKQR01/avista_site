@@ -9,7 +9,12 @@
       "@styles/*": ["./src/styles/*"],
       "@utils/*": ["./src/utils/*"],
       "@hocs/*": ["./src/hocs/*"],
+<<<<<<< HEAD
       "@providers/*": ["./src/hocs/*"]
+=======
+      "@providers/*": ["./src/hocs/*"],
+      "@validation/*": ["./src/validation/*"]
+>>>>>>> 01314a2... Private routes, SWR, remove orders, validation
     }
   },
   "exclude": ["node_modules"]
