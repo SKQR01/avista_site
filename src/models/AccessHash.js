@@ -1,14 +1,13 @@
-import mongoose, {Schema} from "mongoose"
-import validator from "validator"
+const mongoose = require('mongoose');
 
-const AccessHashSchema = new Schema({
+const AccessHashSchema = new mongoose.Schema({
         hash: {
             type: String,
             required: [true, "Необходим хеш."],
             index: true,
         },
         user: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: [true, "У хеша должен быть id пользователя."],
         },

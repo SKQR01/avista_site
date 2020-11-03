@@ -10,7 +10,9 @@
       "@utils/*": ["./src/utils/*"],
       "@hocs/*": ["./src/hocs/*"],
       "@providers/*": ["./src/hocs/*"],
-      "@validation/*": ["./src/validation/*"]
+      "@validation/*": ["./src/validation/*"],
+      "@images/*": ["./images/*"],
+      "@root/*": ["./*"]
     }
   },
   "exclude": ["node_modules"]

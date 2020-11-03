@@ -9,9 +9,6 @@ export default apiRoutesHandler(
     withDb({
         POST: async (req, res) => {
             try {
-                if (req.cookies.authToken) {
-                    return res.status(400).json({errors: [{name: 'common', message: "Вы уже авторизованы."}]})
-                }
                 const {email} = req.body
                 if (!email) {
                     return res.status(422).json({

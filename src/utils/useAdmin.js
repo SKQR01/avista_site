@@ -18,11 +18,8 @@ const useFixedSWR = (key, fetcher, {initialData, ...config} = {}) => {
 
 export default function useAdmin({redirectTo = false, redirectIfFound=false} = {}) {
     //Деструктуриуем из запроса данные, о том, является ли пользователь админом.
-
     const {data: user, mutate} = useSWR('/api/admin/checkPermissions', async (url) => axios.get(url).then(res => res.data.user).catch(error => error.response.data.user))
-    console.log(user)
     useEffect(() => {
-
         if (!redirectTo || !user) {
             return
         }

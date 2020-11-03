@@ -7,12 +7,12 @@ import {sendNewAccountPasswordToUser} from "@utils/mailer"
 
 import generatePassword from "password-generator"
 
-import {verify} from "jsonwebtoken"
-import {secret} from "@utils/secret"
-import dbErrorCompile from "@utils/dbErrorCompile";
-import validateData from "@validation/validator";
-import {orderSchemaValidation} from "@validation/schemes";
-import withSession from "@utils/withSession";
+import dbErrorCompile from "@utils/dbErrorCompile"
+import validateData from "@validation/validator"
+import {orderSchemaValidation} from "@validation/schemes"
+import withSession from "@utils/withSession"
+
+import config from "@root/config"
 
 
 export default apiRoutesHandler(
@@ -26,7 +26,7 @@ export default apiRoutesHandler(
                     const user = await User.findById(session.userId)
                     console.log(user)
                     if (user) {
-                        const defaultStatus = await OrderStatus.findOne({title: "Не подтверждён"}).lean()
+                        const defaultStatus = await OrderStatus.findOne(config.orderStatuses.notAccepted).lean()
                         const newOrder = await new Order({...req.body, user: user.id, status: defaultStatus._id})
                         await newOrder.save()
 
@@ -57,7 +57,7 @@ export default apiRoutesHandler(
 
                         await sendNewAccountPasswordToUser(requestUserData.email, newPassword)
 
-                        const defaultStatus = await OrderStatus.findOne({title: "Не подтверждён"}).lean()
+                        const defaultStatus = await OrderStatus.findOne(config.orderStatuses.notAccepted).lean()
                         const newOrder = await new Order({...req.body, user: newUser.id, status: defaultStatus._id})
                         await newOrder.save()
 

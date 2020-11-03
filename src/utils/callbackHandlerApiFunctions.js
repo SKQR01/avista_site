@@ -1,7 +1,5 @@
-import verify from "jsonwebtoken/verify"
-
 import User from "@models/User"
-import withSession from "@utils/withSession"
+
 
 
 // async function clearExpiresCookies(user) {
@@ -24,19 +22,23 @@ import withSession from "@utils/withSession"
 export async function checkAuthentication(req, session) {
     if(session){
         const user = await User.findById(session?.userId)
-        const isRequestTokenInUsersTokens = user.tokens.includes(session?.sessionId)
-        return !(!!user && isRequestTokenInUsersTokens)
+        if(user){
+            const isRequestTokenInUsersTokens = user.tokens.includes(session?.sessionId)
+            return !(!!user && isRequestTokenInUsersTokens)
+        }
+
+        return false
     }
-    console.log("Посылаем нафиг в checkAuthentication.")
+
     return "Вы, не авторизованы. Авторизуйтесь, а после этого попробуйте ещё раз."
 }
 
 export async function checkAdminPermission(req, session) {
     if(session){
         const user = await User.findById(session.userId).populate('permissions')
-        return !!user.permissions.find(permission => permission.title === "Администратор")
+        return !user.permissions.find(permission => permission.title === "Администратор")
     }
-    console.log("Посылаем нафиг в checkAdminPermission.")
+
     return "Вы не имеете прав на это действие."
 }
 

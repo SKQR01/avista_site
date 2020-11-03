@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+const mongoose = require('mongoose');
 
 const OrderStatusSchema = new mongoose.Schema({
     title: {
@@ -10,5 +10,5 @@ const OrderStatusSchema = new mongoose.Schema({
 
 
 const OrderStatus = mongoose.models.OrderStatus || mongoose.model('OrderStatus', OrderStatusSchema, "OrderStatus")
-export default OrderStatus
+module.exports=OrderStatus
 

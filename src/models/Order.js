@@ -1,8 +1,8 @@
-import mongoose, {Schema} from "mongoose"
-import OrderStatus from "@models/OrderStatus"
+const mongoose = require('mongoose');
+// import OrderStatus from "@models/OrderStatus"
 
 
-const OrderSchema = new Schema({
+const OrderSchema = new mongoose.Schema({
         title: {
             type: String,
             required: [true, "Пожалуйста сформулируйте тему заказа."],
@@ -15,12 +15,12 @@ const OrderSchema = new Schema({
             index: true
         },
         user: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: [true, "У заказа должен быть заказчик."],
         },
         status: {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "OrderStatus",
         },
         price: {

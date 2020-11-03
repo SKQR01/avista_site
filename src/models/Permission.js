@@ -1,7 +1,7 @@
-import mongoose from 'mongoose'
-const { Schema } = mongoose
+const mongoose = require('mongoose')
 
-const PermissionSchema = new Schema({
+
+const PermissionSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, "Пожалуйста напишите название роли."],
@@ -12,6 +12,6 @@ const PermissionSchema = new Schema({
 
 
 const Permission = mongoose.models.Permission || mongoose.model('Permission', PermissionSchema, "Permission")
-export default Permission
+module.exports=Permission
 
 
