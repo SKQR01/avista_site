@@ -1,4 +1,3 @@
-import Spinner from "react-bootstrap/Spinner"
 import Button from "react-bootstrap/Button"
 import BootstrapTable from 'react-bootstrap-table-next'
 import cellEditFactory, {Type} from 'react-bootstrap-table2-editor'
@@ -7,65 +6,25 @@ import paginationFactory from 'react-bootstrap-table2-paginator'
 import axios from "axios"
 import {useEffect, useState} from "react"
 
-import {useRouter} from "next/router"
-import AdminPanelWrapper from "@components/admin/AdminPanelWrapper";
+import {useRouter, withRouter} from "next/router"
+import AdminPanelWrapper from "@components/admin/AdminPanelWrapper"
+import {redirectIfNotAdmin} from "@utils/privateRedirects"
+import Row from "react-bootstrap/Row"
+import FormControl from "react-bootstrap/FormControl"
+import Col from "react-bootstrap/Col"
 
-const onColumnClick = (e, column, columnIndex, row, rowIndex) => {
-    console.log(e);
-    console.log(column);
-    console.log(columnIndex);
-    console.log(row);
-    console.log(rowIndex);
-    alert('Click on Product ID field');
-}
 
-const columns = [
-    {
-        dataField: '_id',
-        text: 'ID заказа',
-        editable: false,
-        onClick: onColumnClick
-    },
-    {
-        dataField: 'title',
-        text: 'Тема заказа',
-        editable: false,
-        onClick: onColumnClick
-    },
-    {
-        dataField: 'status.title',
-        text: 'Статус',
-        editor: {
-            type: Type.SELECT,
-            getOptions: (setOptions) => {
-                axios.get(`/api/admin/orders/statuses`, {withCredentials: true}).then((res) => {
-                    const optionsToSet = res.data.success.payload.ordresStatuses.map(option => {
-                        return {value: option._id, label: option.title}
-                    })
-                    setOptions(optionsToSet)
-                }).catch(err => console.log(err))
+// const rowEvents = {
+//     onClick: (e, row, rowIndex) => {
+//         router.push({pathname: `/account/orders/${row._id}`, query: {id: row._id}})
+//     },
+// }
 
-            }
-        }
-    },
-    {
-        dataField: 'price',
-        text: 'Оплата'
-    },
-    {
-        dataField: 'user.fullName',
-        text: 'Заказчик',
-        editable: false,
-        onClick: onColumnClick
-    },
-]
 
 
 const NoDataIndication = () => {
     return (
-        <Spinner animation="border" role="status">
-            <span className="sr-only">Загружаем...</span>
-        </Spinner>
+        <span>Заказов пока нет.</span>
     )
 }
 
@@ -83,6 +42,60 @@ const AdminOrders = () => {
     const [error, setError] = useState(null)
     const [node, setNode] = useState()
     const [searchQuery, setSearchQuery] = useState()
+
+
+    const onColumnClick = (e, column, columnIndex, row, rowIndex) => {
+        console.log(row)
+        router.push({pathname: `/admin/orders/${row._id}`, query: {id: row._id}})
+    }
+
+    const columns = [
+        {
+            dataField: '_id',
+            text: 'ID заказа',
+            onClick: onColumnClick,
+            editable: false,
+            events:{
+                onClick:onColumnClick
+            }
+        },
+        {
+            dataField: 'title',
+            text: 'Тема заказа',
+            editable: false,
+            events:{
+                onClick:onColumnClick
+            }
+        },
+        {
+            dataField: 'status.title',
+            text: 'Статус',
+            editor: {
+                type: Type.SELECT,
+                getOptions: (setOptions) => {
+                    axios.get(`/api/admin/orders/statuses`, {withCredentials: true}).then((res) => {
+                        const optionsToSet = res.data.success.payload.ordresStatuses.map(option => {
+                            return {value: option._id, label: option.title}
+                        })
+                        setOptions(optionsToSet)
+                    }).catch(err => console.log(err))
+
+                }
+            }
+        },
+        {
+            dataField: 'price',
+            text: 'Оплата'
+        },
+        {
+            dataField: 'user.fullName',
+            text: 'Заказчик',
+            editable: false,
+            events:{
+                onClick:onColumnClick
+            }
+        },
+    ]
 
     async function handleTableChange(type, {page, sizePerPage, cellEdit}) {
         if (cellEdit) {
@@ -145,7 +158,7 @@ const AdminOrders = () => {
                 setTotalSize(res.data.success.payload.totalSize)
             })
             .catch(error => {
-                console.log(error)
+                console.log(error.response.data)
             })
 
     }
@@ -169,17 +182,14 @@ const AdminOrders = () => {
         setSearchQuery(setTimeout(() => fetchData(value), 1500))
     }
 
-    const rowEvents = {
-        onClick: (e, row, rowIndex) => {
-            router.push({pathname: `/admin/orders/${row._id}`, query: {id: row._id}})
-        },
-    }
 
     return (
         <AdminPanelWrapper>
-            <div>
-                <input placeholder={"Поиск"} onChange={e => onTypingSearch(e.target.value)}/>
-            </div>
+            <Row>
+                <Col sm={12} md={8} className={"p-5"}>
+                    <FormControl placeholder={"Поиск"} onChange={e => onTypingSearch(e.target.value)}/>
+                </Col>
+            </Row>
             <Button variant="danger" onClick={removeHandler}>Danger</Button>
             <BootstrapTable
                 remote
@@ -198,11 +208,12 @@ const AdminOrders = () => {
                         mode: 'checkbox',
                     }
                 }
-                rowEvents={rowEvents}
             />
         </AdminPanelWrapper>
     )
 }
 
+//Обеспечивает приватность администраторской панели
+export const getServerSideProps = async (ctx) => redirectIfNotAdmin(ctx)
 
 export default AdminOrders

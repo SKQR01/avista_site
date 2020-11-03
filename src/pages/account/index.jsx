@@ -11,7 +11,6 @@ import axios from "axios"
 import BootstrapTable from 'react-bootstrap-table-next'
 
 
-
 import MainWrapper from "@components/MainWrapper"
 import {useCallback, useEffect, useState} from "react"
 
@@ -21,12 +20,12 @@ import overlayFactory from 'react-bootstrap-table2-overlay'
 
 import tableDateFormatter from "@utils/tableDateFormatter"
 import {useRouter} from "next/router"
-import nextCookie from "next-cookies";
-import {redirectIfNotAuth} from "@utils/authRedirecter"
-import useUser from "@utils/useUser"
-import useSWR from "swr"
-import fetcher, {ordersFetcher} from "@utils/fetchJson";
-import useAdmin from "@utils/useAdmin";
+
+
+import Link from "next/link"
+import {redirectIfNotAuth} from "@utils/privateRedirects";
+
+
 
 const columns = [{
     dataField: 'title',
@@ -46,16 +45,14 @@ const columns = [{
 
 const NoDataIndication = () => {
     return (
-        <p>Вы пока что не сделали ни одного заказа.</p>
-        // <Spinner animation="border" role="status">
-        //     <span className="sr-only">Loading...</span>
-        // </Spinner>
+        <p>Ваш список заказов до сих пор. Вы можете сделать его <Link href={"/ordersForm"}><a>здесь</a></Link>.</p>
     )
 }
 
 
-const Account = () => {
+const Account = ({user}) => {
     const [page, setPage] = useState(1)
+    const [userAccount, setUserAccount] = useState()
     const [sizePerPage, setSizePerPage] = useState(10)
     const [orders, setOrders] = useState([])
     const [totalSize, setTotalSize] = useState()
@@ -88,6 +85,14 @@ const Account = () => {
             })
     }
 
+    async function fetchUser() {
+        axios.get("/api/user/account").then(res => {
+            setUserAccount(res.data.success.payload.user)
+        }).catch(err =>{
+            console.log(err.response.data)
+        })
+    }
+
     const removeHandler = () => {
         const removeConfirm = confirm("Вы уверены, что хотите отказаться от указанных заказов?")
 
@@ -106,15 +111,17 @@ const Account = () => {
     }
 
     useEffect(() => {
+        fetchUser()
+    }, [])
+
+    useEffect(() => {
         fetchData()
     }, [page, sizePerPage])
 
-    const { user } = useUser({ redirectTo: '/signin' })
 
     if (!user || user.isLoggedIn === false) {
         return <MainWrapper>loading...</MainWrapper>
     }
-
 
 
     return (
@@ -125,10 +132,16 @@ const Account = () => {
                         <Container fluid>
                             <Card>
                                 <Card.Header
-                                    as={"h1"}>{user.secondName} {user.firstName} {user.patronymicName}</Card.Header>
+                                    as={"h1"}>{userAccount?.secondName} {userAccount?.firstName} {userAccount?.patronymicName}</Card.Header>
                                 <ListGroup variant="flush">
-                                    <ListGroup.Item>E-mail: {user.email}</ListGroup.Item>
-                                    <ListGroup.Item>Телефон: {user.phoneNumber}</ListGroup.Item>
+                                    <ListGroup.Item>E-mail: {userAccount?.email}</ListGroup.Item>
+                                    <ListGroup.Item>Телефон: {userAccount?.phoneNumber}</ListGroup.Item>
+                                    <ListGroup.Item className={"d-flex flex-column"}>
+                                        <h4>Хотите поменять пароль?</h4>
+                                        <Link href={"/password-reset"}>
+                                            <a> Вы можете сделать это здесь.</a>
+                                        </Link>
+                                    </ListGroup.Item>
                                 </ListGroup>
                             </Card>
                         </Container>
@@ -136,10 +149,14 @@ const Account = () => {
                     <Col md={8}>
                         <Container fluid>
                             <Card>
-
                                 <Card.Header as={"h3"}>Ваши заказы</Card.Header>
-                                <Button onClick={removeHandler}>Отказаться от выделенных заказов</Button>
-                                <div className="pb-3 pl-3 pr-3">
+                                <Row className={"justify-content-end pt-3 px-3"}>
+                                    <Col sm={4}>
+                                        <Button onClick={removeHandler}>Отказаться от выделенных заказов</Button>
+                                    </Col>
+                                </Row>
+
+                                <div className="pb-3 px-3">
                                     <BootstrapTable
                                         remote
                                         keyField='_id'
@@ -177,10 +194,8 @@ const Account = () => {
     )
 }
 
-// export async function getServerSideProps(ctx) {
-//     redirectIfNotAuth(ctx)
-//     return {props:{}}
-//
-// }
+//Обеспечивает приватность
+export const getServerSideProps = async (ctx) => redirectIfNotAuth(ctx)
+
 
 export default Account

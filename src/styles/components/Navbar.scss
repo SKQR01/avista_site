@@ -1,6 +1,6 @@
 $border-color: #d0d0d0;
 $theme-first-color: #117382;
-$theme-second-color: #BB0001;
+$theme-second-color: #bd0102;
 
 
 .main-navbar {
@@ -49,12 +49,12 @@ $theme-second-color: #BB0001;
     bottom: 3%;
     left: 7%;
     right: 7%;
-    border: $theme-second-color solid 2px;
+    border-bottom: 4px solid $theme-second-color;
     transition: .2s;
-    transform: scale(0);
+    transform: scaleX(0);
   }
   &:hover:before{
-    transform: scale(1);
+    transform: scaleX(1);
   }
 }
 

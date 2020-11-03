@@ -1,8 +1,9 @@
-import mongoose, {Schema} from "mongoose"
-import bcrypt from "bcrypt"
-import uniqueValidator from "mongoose-unique-validator"
+const mongoose = require('mongoose');
+const bcrypt = require("bcrypt")
+const uniqueValidator = require("mongoose-unique-validator")
 
-import Permission from "@models/Permission"
+const config = require("../../config")
+const Permission = require("./Permission")
 
 
 const UserSchema = new mongoose.Schema({
@@ -37,7 +38,7 @@ const UserSchema = new mongoose.Schema({
     },
     orders: [
         {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Order",
         }
     ],
@@ -46,7 +47,7 @@ const UserSchema = new mongoose.Schema({
     },
     permissions: [
         {
-            type: Schema.Types.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "Permission",
         }
     ],
@@ -56,7 +57,7 @@ const UserSchema = new mongoose.Schema({
 
 UserSchema.pre('save', function (next) {
     const user = this
-    Permission.findOne({title: "Пользователь"}).then(permission => {
+    Permission.findOne(config.permissions.user).then(permission => {
         if (!user.isModified('password')) {
             return next()
         }
@@ -77,7 +78,7 @@ UserSchema.plugin(uniqueValidator)
 
 const User = mongoose.models.User || mongoose.model('User', UserSchema, "User")
 
-export default User
+module.exports = User
 
 
 

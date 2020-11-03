@@ -15,6 +15,7 @@ import { ErrorMessage } from '@hookform/error-message'
 
 import {useRouter} from "next/router"
 import {useState} from "react";
+import ButtonGroup from "react-bootstrap/ButtonGroup";
 
 
 const OrdersForm = ({cookie}) => {
@@ -23,6 +24,7 @@ const OrdersForm = ({cookie}) => {
     const [commonSuccessMessage, setCommonSuccessMessage] = useState()
     const [commonErrorMessage, setCommonErrorMessage] = useState()
     const {register, handleSubmit, setError, errors} = useForm()
+
 
     const onSubmit = (data, e) => {
         let requestState = {
@@ -55,54 +57,46 @@ const OrdersForm = ({cookie}) => {
                             <h3 className={"pb-3"}>Кто вы?</h3>
 
                             <ErrorMessage errors={errors} name={"user.secondName"}/>
-                            <InputGroup className={"pb-3"}>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Фамилия</InputGroup.Text>
-                                </InputGroup.Prepend>
+                            <div className={"pb-3"}>
                                 <FormControl as="input" aria-label="Фамилия"
                                              name={"user.secondName"}
+                                             placeholder={"Фамилия"}
                                              ref={register({required: "Введите вашу фамилию"})}/>
-                            </InputGroup>
+                            </div>
 
                             <ErrorMessage errors={errors} name={"user.firstName"}/>
-                            <InputGroup className={"pb-3"}>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Имя</InputGroup.Text>
-                                </InputGroup.Prepend>
+                            <div className={"pb-3"}>
                                 <FormControl as="input" aria-label="Имя"
                                              name={"user.firstName"}
+                                             placeholder={"Имя"}
                                              ref={register({required: "Введите ваше имя."})}/>
-                            </InputGroup>
+                            </div>
 
                             <ErrorMessage errors={errors} name={"user.patronymicName"}/>
-                            <InputGroup className={"pb-5"}>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Отчество</InputGroup.Text>
-                                </InputGroup.Prepend>
+                            <div className={"pb-5"}>
                                 <FormControl as="input" aria-label="Отчество"
+                                             placeholder={"Отчество"}
                                              name={"user.patronymicName"}
                                              ref={register({required: "Введите ваше отчество."})}/>
-                            </InputGroup>
+                            </div>
 
+
+                            <h3 className={"pb-3"}>Контактные данные</h3>
                             <ErrorMessage errors={errors} name={"user.phoneNumber"}/>
-                            <InputGroup className={"pb-3"}>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Сотовый телефон</InputGroup.Text>
-                                </InputGroup.Prepend>
+                            <div className={"pb-3"}>
                                 <FormControl as="input" aria-label="Телефон"
                                              name={"user.phoneNumber"}
+                                             placeholder={"Телефон"}
                                              ref={register({required: "Введите ваш сотовый телефон (это необходимо, чтобы связаться с вами)."})}/>
-                            </InputGroup>
+                            </div>
 
                             <ErrorMessage errors={errors} name={"user.email"}/>
-                            <InputGroup className={"pb-3"}>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Email</InputGroup.Text>
-                                </InputGroup.Prepend>
+                            <div className={"pb-3"}>
                                 <FormControl as="input" aria-label="Почта"
                                              name={"user.email"}
+                                             placeholder={"Email"}
                                              ref={register({required: "Введите вашу почту (это необходимо, чтобы связаться с вами)."})}/>
-                            </InputGroup>
+                            </div>
                         </Container>
                         }
 
@@ -110,29 +104,35 @@ const OrdersForm = ({cookie}) => {
                             <h3 className={"pb-2"}>Ваш заказ:</h3>
 
                             <ErrorMessage errors={errors} name={"title"}/>
-                            <InputGroup className={"pb-3"}>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Тема заказа</InputGroup.Text>
-                                </InputGroup.Prepend>
+                            <div className={"pb-3"}>
                                 <FormControl as="input" aria-label="Тема заказа"
                                              name={"title"}
+                                             placeholder={"Тема заказа"}
                                              ref={register({required: "Введите тему заказа"})}/>
-                            </InputGroup>
+                            </div>
 
                             <ErrorMessage errors={errors} name={"description"}/>
-                            <InputGroup>
-                                <InputGroup.Prepend>
-                                    <InputGroup.Text>Описание</InputGroup.Text>
-                                </InputGroup.Prepend>
+                            <div>
                                 <FormControl as="textarea" aria-label="Описание заказа"
                                              name={"description"}
+                                             placeholder={"Описание"}
                                              ref={register({required: "Опишите ваш заказ."})}/>
-                            </InputGroup>
+                            </div>
                         </Container>
                         <Container fluid>
-                            <Row className="justify-content -md-end">
-                                <Col sm={12} md={4} className="justify-content-md-center">
-                                    <Button type="submit" className={"w-100"}>Отправить заявку</Button>
+                            <Row className="justify-content-md-end text-xs-center text-md-end">
+
+
+                                <Col xs={12} md={4} className={"text-sm-center "}>
+
+                                    <ButtonGroup aria-label="order-actions">
+                                        {cookie &&
+                                        <Button onClick={() => router.back()} className={"w-100"}>
+                                            Назад
+                                        </Button>
+                                        }
+                                        <Button type="submit" className={"w-100 ml-md-3"}>Оформить заказ</Button>
+                                    </ButtonGroup>
                                 </Col>
                             </Row>
                         </Container>

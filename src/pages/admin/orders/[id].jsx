@@ -13,6 +13,7 @@ import Col from "react-bootstrap/Col"
 import {ErrorMessage} from "@hookform/error-message"
 import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
+import {redirectIfNotAdmin} from "@utils/privateRedirects";
 
 const UserOrder = () => {
     const router = useRouter()
@@ -51,7 +52,6 @@ const UserOrder = () => {
 
     return (
         <>
-            <pre>{order ? JSON.stringify(order, null, 4) : "Заказ не найден."}</pre>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Container fluid className={"pb-4"}>
                     <Container fluid className={"pb-4"}>
@@ -109,32 +109,42 @@ const UserOrder = () => {
                         />
 
                     </Container>
-                    {/*{order &&*/}
-                    {/*<Container fluid>*/}
-                    {/*    <Card style={{width: '18rem'}}>*/}
-                    {/*        <Card.Header><h2>О заказчике</h2></Card.Header>*/}
-                    {/*        <ListGroup variant="flush">*/}
-                    {/*            <ListGroup.Item>*/}
-                    {/*                ФИО: {order.user.secondName} {order.user.firstName} {order.user.patronymicName}*/}
-                    {/*            </ListGroup.Item>*/}
-                    {/*            <ListGroup.Item>*/}
-                    {/*                Email: {order.user.email}*/}
-                    {/*            </ListGroup.Item>*/}
-                    {/*            <ListGroup.Item>*/}
-                    {/*                Телефон: {order.user.phoneNumber}*/}
-                    {/*            </ListGroup.Item>*/}
-                    {/*        </ListGroup>*/}
-                    {/*    </Card>*/}
-                    {/*</Container>    */}
-                    {/*}*/}
+                    {order &&
+                    <Container fluid>
+                        <Card >
+                            <Card.Header><h2>О заказчике</h2></Card.Header>
+                            <ListGroup variant="flush">
+                                <ListGroup.Item>
+                                    ФИО: {order.user.secondName} {order.user.firstName} {order.user.patronymicName}
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    Email: {order.user.email}
+                                </ListGroup.Item>
+                                <ListGroup.Item>
+                                    Телефон: {order.user.phoneNumber}
+                                </ListGroup.Item>
+                            </ListGroup>
+                        </Card>
+                        <Row className={"justify-content-end"}>
+                            <Col xs={12} md={5} lg={4} style={{textAlign:"end"}}>
+
+                                <Button onClick={router.back}>Назад</Button>
+                                <Button className={"ml-sm-3"}  type={"submit"}>Изменить данные</Button>
+                            </Col>
+                        </Row>
+                    </Container>
+                    }
 
 
                 </Container>
-                <div><Button type={"submit"}>Изменить данные</Button></div>
+
             </form>
         </>
     )
 }
+
+//Обеспечивает приватность администраторской панели
+export const getServerSideProps = async (ctx) => redirectIfNotAdmin(ctx)
 
 export default UserOrder
 

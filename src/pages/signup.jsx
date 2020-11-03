@@ -12,6 +12,7 @@ import {useForm} from "react-hook-form"
 import {useState} from "react"
 
 import {phoneNumberRegexp, emailRegexp, cyrillicOrLateinschriftRegexp, passwordRegexp} from "@validation/regexps"
+import {useRouter} from "next/router";
 
 
 const SignUp = () => {
@@ -21,6 +22,7 @@ const SignUp = () => {
     const [commonErrorMessage, setCommonErrorMessage] = useState()
 
     const password = watch("password")
+    const router = useRouter()
 
     const customErrors = {
         secondName: {
@@ -56,6 +58,7 @@ const SignUp = () => {
     const onSubmit = (data) => {
         axios.post("/api/signup", {...data}).then(res => {
             setCommonSuccessMessage(res.data.success.message)
+            router.push("/account")
         }).catch(err => {
             if (err.response.data.errors[0].name !== "common") {
                 err.response.data.errors.map(error => setError(error.name, {message:error.message, type:"server"}))

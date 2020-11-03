@@ -1,23 +1,13 @@
 $colore: rgb(105, 204, 208);
-.admin{
-  &-sidebar{
-    background: rgb(16,108,125);
-    background: linear-gradient(rgba(16,108,125,1) 0%, rgba(31,179,201,1) 100%);
-    transition: 0.3s;
-    color: $colore;
-    & a:hover{
-      color: #76ecff;
-      transition: 0.3s;
-    }
-    .separator{
-      border-top: $colore 1px solid;
-    }
+.admin-nav{
+
+
+  justify-items: center;
+  height: 100%;
+  @media (min-width: 768px) {
+    height: 100vh;
+    border-right: 1px  $colore solid;
   }
-}
 
-.defis{
-  color:red;
-  word-wrap:break-word;
 }
-
 

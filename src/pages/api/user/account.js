@@ -18,7 +18,7 @@ export default apiRoutesHandler({
     GET: callbackHandlerApi([checkAuthentication], async (req, res, session) => {
             try {
                 if (!session) {
-                    return res.status(401).json({success:{name:"Common", message:"Вы не авторизованы.", payload:{user:{isLoggedIn: false}}}})
+                    return res.status(401).json({errors:{name:"Common", message:"Вы не авторизованы.", payload:{user:{isLoggedIn: false}}}})
                 }
 
                 const user = await User.findById(session.userId).select("-tokens -permissions -password -__v").lean()

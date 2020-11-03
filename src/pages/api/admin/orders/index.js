@@ -24,7 +24,7 @@ export default apiRoutesHandler(
 
                     const potentialErrors = validateData(req.query, validationSchema)
                     if (potentialErrors.length !== 0) return res.status(422).json({errors: potentialErrors})
-                    console.log("asdasdaadsasdsdaad")
+
 
                     const pageNumber = parseInt(req.query.pageNumber)
                     const pagination = parseInt(req.query.pagination)

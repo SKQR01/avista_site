@@ -1,5 +1,6 @@
 import React from 'react'
 import AdminPanelWrapper from "@components/admin/AdminPanelWrapper"
+import {redirectIfNotAdmin} from "@utils/privateRedirects"
 
 const AdminIndex = () => {
     return (
@@ -8,5 +9,8 @@ const AdminIndex = () => {
         </AdminPanelWrapper>
     )
 }
+
+//Обеспечивает приватность администраторской панели
+export const getServerSideProps = async (ctx) => redirectIfNotAdmin(ctx)
 
 export default AdminIndex

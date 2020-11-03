@@ -1,27 +1,15 @@
-import { useEffect } from 'react'
+import {useCallback, useEffect} from 'react'
 import Router from 'next/router'
 import useSWR from 'swr'
 import {userFetcher} from "@utils/fetchJson"
+import {useQuery} from 'react-query'
+import axios from "axios";
 
-export default function useUser({ redirectTo = false, redirectIfFound = false} = {}) {
+export default function useUser({redirectTo = false, redirectIfFound = false} = {}) {
+    const {data: user, mutateUser} = useSWR('/api/user/account', userFetcher)
 
-  const {data:user, mutateUser} = useSWR('/api/user/account', userFetcher)
+    return {user, mutateUser}
 
-  useEffect(() => {
-
-    if (!redirectTo || !user) {
-      return
-    }
-
-    if (
-      (redirectTo && !redirectIfFound && !user?.isLoggedIn) ||
-      (redirectIfFound && user?.isLoggedIn)
-    ) {
-      Router.push(redirectTo)
-    }
-  }, [user, redirectIfFound, redirectTo])
-
-  return { user, mutateUser }
 }
 
 
