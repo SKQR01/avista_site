@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-// import OrderStatus from "@models/OrderStatus"
+
 
 
 const OrderSchema = new mongoose.Schema({
@@ -33,7 +33,13 @@ const OrderSchema = new mongoose.Schema({
 
 OrderSchema.index({title: 'text', description: 'text'})
 
-const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema, "Order")
+// const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema, "Order")
+// let Order
+// try {
+//     Order = mongoose.model("Order");
+// } catch {
+//     Order = mongoose.model("Order", OrderSchema, "Order");
+// }
 
-module.exports = Order
+module.exports = mongoose.models.Order || mongoose.model('Order', OrderSchema)
 

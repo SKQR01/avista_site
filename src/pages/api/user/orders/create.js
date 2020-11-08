@@ -1,8 +1,8 @@
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import Order from '@models/Order'
-import OrderStatus from "@models/OrderStatus"
-import User from "@models/User"
+import Order from './../../../../models/Order'
+import OrderStatus from "../../../../models/OrderStatus"
+import User from "./../../../../models/User"
 import {sendNewAccountPasswordToUser} from "@utils/mailer"
 
 import generatePassword from "password-generator"
@@ -24,10 +24,9 @@ export default apiRoutesHandler(
                 const session = req.session.get("authToken")
                 if (session) {
                     const user = await User.findById(session.userId)
-                    console.log(user)
                     if (user) {
                         const defaultStatus = await OrderStatus.findOne(config.orderStatuses.notAccepted).lean()
-                        const newOrder = await new Order({...req.body, user: user.id, status: defaultStatus._id})
+                        const newOrder = await Order.create({...req.body, user: user.id, status: defaultStatus._id})
                         await newOrder.save()
 
                         await user.orders.addToSet(newOrder.id)
@@ -49,7 +48,7 @@ export default apiRoutesHandler(
                     const requestUserData = req.body.user
                     const newPassword = generatePassword(15, false)
 
-                    const newUser = await new User({...requestUserData, password: newPassword})
+                    const newUser = await User.create({...requestUserData, password: newPassword})
                     await newUser.save(async function (err) {
                         if (err) {
                             return dbErrorCompile(err, res)
@@ -58,7 +57,7 @@ export default apiRoutesHandler(
                         await sendNewAccountPasswordToUser(requestUserData.email, newPassword)
 
                         const defaultStatus = await OrderStatus.findOne(config.orderStatuses.notAccepted).lean()
-                        const newOrder = await new Order({...req.body, user: newUser.id, status: defaultStatus._id})
+                        const newOrder = await Order.create({...req.body, user: newUser.id, status: defaultStatus._id})
                         await newOrder.save()
 
                         newUser.orders.addToSet(newOrder.id)

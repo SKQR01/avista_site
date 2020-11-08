@@ -7,6 +7,8 @@ import '@styles/components/signin.scss'
 import '@styles/components/Navbar.scss'
 import '@styles/components/admin.scss'
 import '@styles/components/FloatInput.scss'
+import '@styles/components/footer.scss'
+import "@styles/components/table.scss"
 
 const TIMEOUT = 500
 
@@ -29,7 +31,7 @@ export default function MyApp({Component, pageProps}) {
                     }}
                     loadingClassNames="loading-indicator"
                 >
-                    <Component {...pageProps} />
+                    <Component {...pageProps} key={"app"}/>
                 </PageTransition>
                 <style jsx global>{`
         .page-transition-enter {

@@ -8,7 +8,14 @@ const OrderStatusSchema = new mongoose.Schema({
     },
 })
 
+// let OrderStatus
+// try {
+//     OrderStatus = mongoose.model("OrderStatus");
+// } catch {
+//     OrderStatus = mongoose.model("OrderStatus", OrderStatusSchema, "OrderStatus");
+// }
+// const OrderStatus = mongoose.models.OrderStatus || mongoose.model('OrderStatus', OrderStatusSchema, "OrderStatus")
+// const OrderStatus = mongoose.model('OrderStatus', OrderStatusSchema, "OrderStatus")
 
-const OrderStatus = mongoose.models.OrderStatus || mongoose.model('OrderStatus', OrderStatusSchema, "OrderStatus")
-module.exports=OrderStatus
+module.exports = mongoose.models.OrderStatus || mongoose.model('OrderStatus', OrderStatusSchema)
 

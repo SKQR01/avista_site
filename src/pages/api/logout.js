@@ -1,8 +1,7 @@
-import jwt from "jsonwebtoken"
-import {secret} from "@utils/secret"
+
 import apiRoutesHandler from "@utils/apiRoutesHandler"
 import withDb from "@utils/dbConnect"
-import User from "@models/User"
+import User from "./../../models/User"
 import dbErrorCompile from "@utils/dbErrorCompile"
 import withSession from "@utils/withSession"
 
@@ -21,12 +20,6 @@ export default apiRoutesHandler(
                 if(!user){
                     return res.status(404).send({errors:[{name:'common', message:"Пользователя не найдено."}]})
                 }
-                user.tokens.pull(session.sessionId)
-                await user.save((err) => {
-                    if(err) {
-                        return dbErrorCompile(err, res)
-                    }
-                })
                 req.session.destroy()
                 res.status(200).json({success:[{name:'common', message:"Вы успешно вышли из аккаунта"}]})
             }catch (e) {

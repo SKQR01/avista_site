@@ -1,18 +1,14 @@
-import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
 
-import {verify} from "jsonwebtoken"
-import {secret} from "@utils/secret"
-
-import User from "@models/User"
+import User from "./../../../models/User"
 import dbErrorCompile from "@utils/dbErrorCompile";
 import validateData from "@validation/validator";
-import {withIronSession} from "next-iron-session";
+
 
 import {userSchemaValidation} from "@validation/schemes"
-import withSession from "@utils/withSession";
+
 
 export default apiRoutesHandler({
     GET: callbackHandlerApi([checkAuthentication], async (req, res, session) => {

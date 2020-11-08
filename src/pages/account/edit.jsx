@@ -5,7 +5,7 @@ import {useForm} from "react-hook-form"
 import {ErrorMessage} from "@hookform/error-message"
 import Container from "react-bootstrap/Container"
 import Button from "react-bootstrap/Button"
-import axios from "axios";
+import axios from "@utils/axios";
 import useUser from "@utils/useUser";
 import {useRouter} from "next/router";
 import MainWrapper from "@components/MainWrapper"

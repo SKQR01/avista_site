@@ -6,7 +6,7 @@ import FormControl from "react-bootstrap/FormControl"
 
 import {useForm} from "react-hook-form"
 
-import axios from "axios"
+import axios from "@utils/axios"
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";

@@ -2,7 +2,7 @@ import Col from "react-bootstrap/Col"
 import Row from "react-bootstrap/Row"
 import Button from "react-bootstrap/Button"
 
-import axios from "axios"
+import axios from "@utils/axios"
 
 
 import MainWrapper from "@components/MainWrapper"

@@ -5,9 +5,8 @@ const callbackHandlerApi = (callbackFunctions, routeApiHandler) => withSession(a
     const userSession = req.session.get("authToken")
     for (let i = 0; i < callbackFunctions.length; i++) {
         const message = await callbackFunctions[i](req, userSession)
-        if (message && userSession) {
+        if (message) {
             return res.status(403).json({
-                loggedIn: false,
                 errors: [{
                     name: 'common',
                     message: message

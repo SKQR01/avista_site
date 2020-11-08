@@ -1,11 +1,10 @@
-import {compare} from "bcrypt"
-import jwt from "jsonwebtoken"
+
 
 
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import AccessHash from '@models/AccessHash'
-import User from '@models/User'
+import AccessHash from './../../../models/AccessHash'
+import User from './../../../models/User'
 import dbErrorCompile from "@utils/dbErrorCompile";
 
 

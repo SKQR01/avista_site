@@ -42,9 +42,6 @@ const UserSchema = new mongoose.Schema({
             ref: "Order",
         }
     ],
-    tokens: {
-        type: [String]
-    },
     permissions: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -76,9 +73,8 @@ UserSchema.pre('save', function (next) {
 
 UserSchema.plugin(uniqueValidator)
 
-const User = mongoose.models.User || mongoose.model('User', UserSchema, "User")
 
-module.exports = User
+module.exports = mongoose.models.User || mongoose.model('User', UserSchema)
 
 
 
