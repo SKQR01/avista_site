@@ -1,5 +1,4 @@
-import User from "@models/User"
-
+import User from "./../models/User"
 
 
 // async function clearExpiresCookies(user) {
@@ -20,21 +19,15 @@ import User from "@models/User"
 // }
 
 export async function checkAuthentication(req, session) {
-    if(session){
+    if (session) {
         const user = await User.findById(session?.userId)
-        if(user){
-            const isRequestTokenInUsersTokens = user.tokens.includes(session?.sessionId)
-            return !(!!user && isRequestTokenInUsersTokens)
-        }
-
-        return false
+        return !(!!user)
     }
-
     return "Вы, не авторизованы. Авторизуйтесь, а после этого попробуйте ещё раз."
 }
 
 export async function checkAdminPermission(req, session) {
-    if(session){
+    if (session) {
         const user = await User.findById(session.userId).populate('permissions')
         return !user.permissions.find(permission => permission.title === "Администратор")
     }

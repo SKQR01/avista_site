@@ -10,8 +10,14 @@ const PermissionSchema = new mongoose.Schema({
 })
 
 
-
-const Permission = mongoose.models.Permission || mongoose.model('Permission', PermissionSchema, "Permission")
-module.exports=Permission
+// let Permission
+// try {
+//     Permission = mongoose.model("Permission");
+// } catch {
+//     Permission = mongoose.model("Permission", PermissionSchema, "Permission");
+// }
+// const Permission = mongoose.model('Permission', PermissionSchema, "Permission")
+// const Permission = mongoose.models.Permission || mongoose.model('Permission', PermissionSchema, "Permission")
+module.exports=mongoose.models.Permission || mongoose.model('Permission', PermissionSchema)
 
 

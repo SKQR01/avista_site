@@ -1,6 +1,6 @@
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import OrderStatus from '@models/OrderStatus'
+import OrderStatus from './../../../../models/OrderStatus'
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerApiFunctions"
 

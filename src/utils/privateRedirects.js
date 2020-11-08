@@ -1,5 +1,5 @@
 import withSession from "@utils/withSession";
-import axios from "axios";
+import axios from "@utils/axios";
 
 export const redirectIfNotAuth = withSession(async function ({req, res}) {
     const user = req.session.get('authToken')
@@ -17,12 +17,11 @@ export const redirectIfNotAuth = withSession(async function ({req, res}) {
 // '/api/admin/checkPermissions', async (url) => axios.get(url).then(res => res.data.user).catch(error => error.response.data.user)
 export const redirectIfNotAdmin = withSession(async function ({req, res}) {
     const user = req.session?.get('authToken')
-
-    const isAdmin = user?.permissions.find(permission => {
+    let isAdmin = !!user?.permissions?.find(permission => {
         return permission.title === "Администратор"
     })
 
-    if (user === undefined || !isAdmin) {
+    if (!isAdmin) {
         res.setHeader('location', '/signin')
         res.statusCode = 302
         res.end()

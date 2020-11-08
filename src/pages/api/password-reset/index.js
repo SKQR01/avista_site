@@ -1,8 +1,8 @@
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import User from "@models/User"
+import User from "./../../../models/User"
 import {v4 as uuidv4} from "uuid"
-import AccessHash from "@models/AccessHash"
+import AccessHash from "../../../models/AccessHash"
 import {sendResetPasswordMailToUser} from "@utils/mailer"
 
 export default apiRoutesHandler(

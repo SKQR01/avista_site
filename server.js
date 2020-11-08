@@ -4,10 +4,16 @@ const {createServer} = require('http')
 const {parse} = require('url')
 const next = require('next')
 
+//Этот файл участвует только в локальной разработке (при хостинге не используется)
 const OrderStatus = require("./src/models/OrderStatus")
 const Permission = require("./src/models/Permission")
-const config = require("./config")
+const AccessHash = require("./src/models/AccessHash")
+const Order = require("./src/models/Order")
+const User = require("./src/models/User")
 
+
+const config = require("./config")
+const nextConfig = require("./next.config")
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({dev})
@@ -20,7 +26,7 @@ const createPermissions = async (permissions) => {
         const foundedPermission = await Permission.findOne(permissions[key])
         console.log("Было найдено право: ", foundedPermission)
         if (!foundedPermission) {
-            const createdPermission = new Permission(permissions[key])
+            const createdPermission = await Permission.create(permissions[key])
             await createdPermission.save()
             console.log("Было создано право: ", createdPermission)
         }
@@ -35,7 +41,7 @@ const createOrderStatuses = async (orderStatuses) => {
         const foundedOrderStatus = await OrderStatus.findOne(orderStatuses[key])
         console.log("Был найден статус: ", foundedOrderStatus)
         if (!foundedOrderStatus) {
-            const createdOrderStatus = new OrderStatus(orderStatuses[key])
+            const createdOrderStatus = await OrderStatus.create(orderStatuses[key])
             await createdOrderStatus.save()
             console.log("Был создан статус заказа: ", createdOrderStatus)
         }
@@ -45,7 +51,7 @@ const createOrderStatuses = async (orderStatuses) => {
 
 
 app.prepare().then(async () => {
-    const dbConnection = await mongoose.connect("mongodb://localhost:27017/avista", {
+    const dbConnection = await mongoose.connect(nextConfig.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,
@@ -57,12 +63,10 @@ app.prepare().then(async () => {
     createServer((req, res) => {
         const parsedUrl = parse(req.url, true)
         const {pathname, query} = parsedUrl
-
-
         handle(req, res, parsedUrl)
 
-    }).listen(3000, (err) => {
+    }).listen(nextConfig.env.PORT, (err) => {
         if (err) throw err
-        console.log('> Ready on http://localhost:3000')
+        console.log(`> Ready on ${nextConfig.env.HOST_URL}`)
     })
 })

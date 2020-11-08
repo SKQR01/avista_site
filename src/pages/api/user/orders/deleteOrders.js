@@ -1,8 +1,8 @@
-import verify from "jsonwebtoken/verify"
+
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import Order from '@models/Order'
-import User from '@models/User'
+import Order from '../../../../models/Order'
+import User from './../../../../models/User'
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
 import {secret} from "@utils/secret"

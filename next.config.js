@@ -1,19 +1,17 @@
 const withImages = require("next-images")
 const withFonts = require('next-fonts')
+require('dotenv').config()
 
 module.exports = withImages(withFonts({
     env: {
-        // API_URL: process.env.API_URL,
-        HOST_URL: "http://localhost",
-        HOST_PORT: "3000",
-        MONGO_URI: "mongodb://localhost:27017/avista",
-        EMAIL: "mytestskqr@gmail.com",
-        PASSWORD: "Skor2001",
-        EMAIL_SERVER_USER: "mytestskqr@gmail.com",
-        EMAIL_SERVER_PASSWORD: "Skor2001",
-        EMAIL_SERVER_HOST: "smtp.gmail.com",
-        EMAIL_SERVER_PORT: 465,
-        EMAIL_FROM: "mytestskqr@gmail.com",
-        SECRET: '3778214125442A472D4B614E645267556B58703273357638792F423F4528482B'
+        HOST_URL: process.env.NODE_ENV === "production" ? process.env.HOST_PRODUCTION_URL : process.env.HOST_DEV_URL,
+        PORT: process.env.PORT,
+
+        MONGO_URI: process.env.MONGO_URI,
+        EMAIL: process.env.EMAIL,
+        PASSWORD: process.env.PASSWORD,
+        EMAIL_SERVER_HOST: process.env.EMAIL_SERVER_HOST,
+        EMAIL_SERVER_PORT: process.env.EMAIL_SERVER_PORT,
+        SECRET: process.env.SECRET
     },
 }))

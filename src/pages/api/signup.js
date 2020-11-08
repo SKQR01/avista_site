@@ -1,6 +1,6 @@
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import User from '@models/User'
+import User from './../../models/User'
 
 import {sendNewAccountPasswordToUser} from "@utils/mailer"
 import dbErrorCompile from "@utils/dbErrorCompile"
@@ -23,19 +23,18 @@ export default apiRoutesHandler(
                     })
                 }
                 const data = req.body
-
+                console.log(JSON.stringify(data, null, 4))
                 const potentialErrors = validateData(data, userSchemaValidation.signup)
                 if(potentialErrors.length !== 0) return  res.status(422).json({errors:potentialErrors})
 
 
-                const newUser = new User(data)
+                const newUser = await User.create(data)
                 await newUser.save(function (err) {
                     if (err) {
                         return dbErrorCompile(err, res)
                     }
                     sendNewAccountPasswordToUser(data.email, data.password)
-                    res.status(200).json({success: {name: 'common', message: "Вы успешно зарегистрированы."}})
-
+                    res.json({success: {name: 'common', message: "Вы успешно зарегистрированы."}})
                 })
             } catch (e) {
                 res.status(500).send({errors: [{name: 'common', message: e.message}]})

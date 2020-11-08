@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios from "@utils/axios"
 
 import {useForm} from "react-hook-form"
 import React, {useState} from "react"
@@ -9,6 +9,7 @@ import Col from "react-bootstrap/Col";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 import {useRouter} from "next/router";
+import {NextSeo} from "next-seo";
 
 
 const PasswordReset = () => {
@@ -27,6 +28,19 @@ const PasswordReset = () => {
     }
 
     return (
+        <>
+            <NextSeo
+                title={"Сброс пароля"}
+                description={"Сброса пароля от аккаунта"}
+                canonical={process.env.HOST_PRODUCTION_URL}
+                url={`${process.env.HOST_PRODUCTION_URL}${router.pathname}`}
+                openGraph={{
+                    locale:"ru_RU",
+                    article:{
+                        tags:["Сброс пароля", "Ависта", "Восстановление аккаунта"]
+                    }
+                }}
+            />
         <div>
             {commonSuccessMessage && commonSuccessMessage}
             {commonErrorMessage && commonErrorMessage}
@@ -52,6 +66,7 @@ const PasswordReset = () => {
                 </Col>
             </Row>
         </div>
+            </>
     )
 }
 
