@@ -12,15 +12,11 @@ export const sendMailFunc = async (mailOption) => {
                 pass: process.env.PASSWORD
             }
         })
-        await transporter.sendMail(mailOption, (err, data) => {
-            if (err) {
-                res.send("error" + JSON.stringify(err))
-            } else {
-                res.send("success")
-            }
-        })
+        await transporter.sendMail(mailOption)
     } catch (e) {
-        console.log(e.message)
+        console.log("----------------Error----------------")
+        console.log("Mailer error: ", e)
+        console.log("-------------------------------------")
     }
 
 }
@@ -42,7 +38,7 @@ export const sendResetPasswordMailToUser = async (email, hash) => {
         from: `${process.env.EMAIL}`,
         to: `${email}`,
         subject: `ООО Ависта 1С Регистрация`,
-        html: `Здравствуйте, вот <a href=${process.env.HOST_URL}:${process.env.HOST_PORT}/password-reset/${hash}>ссылка для сброса пароля</a> на вашем аккаунте.
+        html: `Здравствуйте, вот <a href=${process.env.NODE_ENV === "production" ? process.env.HOST_PRODUCTION_URL : process.env.HOST_DEV_URL}/password-reset/${hash}>ссылка для сброса пароля</a> на вашем аккаунте.
             Если это были не вы, то просто проигнорируйте это письмо`
     }
 

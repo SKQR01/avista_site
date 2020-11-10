@@ -1,9 +1,11 @@
 import Button from "react-bootstrap/Button"
+
 import BootstrapTable from 'react-bootstrap-table-next'
 import cellEditFactory, {Type} from 'react-bootstrap-table2-editor'
-import filterFactory, {textFilter} from 'react-bootstrap-table2-filter'
+import filterFactory, {textFilter, Comparator} from 'react-bootstrap-table2-filter';
 import paginationFactory from 'react-bootstrap-table2-paginator'
-import axios from "axios"
+
+import axios from "@utils/axios"
 import {useEffect, useState} from "react"
 
 import {useRouter, withRouter} from "next/router"
@@ -12,14 +14,9 @@ import {redirectIfNotAdmin} from "@utils/privateRedirects"
 import Row from "react-bootstrap/Row"
 import FormControl from "react-bootstrap/FormControl"
 import Col from "react-bootstrap/Col"
-
-
-// const rowEvents = {
-//     onClick: (e, row, rowIndex) => {
-//         router.push({pathname: `/account/orders/${row._id}`, query: {id: row._id}})
-//     },
-// }
-
+import {tableDateFormatter} from "@utils/tableFormatter"
+import {FaSortUp, FaSortDown, FaSort, FaTrashAlt, FaSyncAlt} from 'react-icons/fa'
+import Nav from "react-bootstrap/Nav"
 
 
 const NoDataIndication = () => {
@@ -35,6 +32,10 @@ const AdminOrders = () => {
 
     const [page, setPage] = useState(1)
     const [sizePerPage, setSizePerPage] = useState(10)
+    const [sortField, setSortField] = useState("createdAt")
+    const [sortOrder, setSortOrder] = useState("desc")
+    const [filter, setFilter] = useState({})
+    const [tabOptions, setTabOptions] = useState([])
 
 
     const [orders, setOrders] = useState([])
@@ -45,7 +46,6 @@ const AdminOrders = () => {
 
 
     const onColumnClick = (e, column, columnIndex, row, rowIndex) => {
-        console.log(row)
         router.push({pathname: `/admin/orders/${row._id}`, query: {id: row._id}})
     }
 
@@ -55,21 +55,42 @@ const AdminOrders = () => {
             text: 'ID заказа',
             onClick: onColumnClick,
             editable: false,
-            events:{
-                onClick:onColumnClick
+            events: {
+                onClick: onColumnClick
+            },
+            sort: true,
+            sortCaret: (order, column) => {
+                if (!order) return (<FaSort/>);
+                else if (order === 'asc') return (<FaSortUp/>);
+                else if (order === 'desc') return (<FaSortDown/>);
+                return null;
             }
         },
         {
             dataField: 'title',
             text: 'Тема заказа',
             editable: false,
-            events:{
-                onClick:onColumnClick
+            events: {
+                onClick: onColumnClick
+            },
+            sort: true,
+            sortCaret: (order, column) => {
+                if (!order) return (<FaSort/>);
+                else if (order === 'asc') return (<FaSortUp/>);
+                else if (order === 'desc') return (<FaSortDown/>);
+                return null;
             }
         },
         {
             dataField: 'status.title',
             text: 'Статус',
+            sort: true,
+            sortCaret: (order, column) => {
+                if (!order) return (<FaSort/>);
+                else if (order === 'asc') return (<FaSortUp/>);
+                else if (order === 'desc') return (<FaSortDown/>);
+                return null;
+            },
             editor: {
                 type: Type.SELECT,
                 getOptions: (setOptions) => {
@@ -81,66 +102,102 @@ const AdminOrders = () => {
                     }).catch(err => console.log(err))
 
                 }
-            }
+            },
         },
         {
             dataField: 'price',
-            text: 'Оплата'
+            text: 'Оплата',
+            sort: true,
+            sortCaret: (order, column) => {
+                if (!order) return (<FaSort/>);
+                else if (order === 'asc') return (<FaSortUp/>);
+                else if (order === 'desc') return (<FaSortDown/>);
+                return null;
+            }
+        },
+        {
+            dataField: 'createdAt',
+            text: 'Дата заказа',
+            sort: true,
+            sortCaret: (order, column) => {
+                if (!order) return (<FaSort/>);
+                else if (order === 'asc') return (<FaSortUp/>);
+                else if (order === 'desc') return (<FaSortDown/>);
+                return null;
+            },
+            formatter: tableDateFormatter
         },
         {
             dataField: 'user.fullName',
             text: 'Заказчик',
             editable: false,
-            events:{
-                onClick:onColumnClick
+            events: {
+                onClick: onColumnClick
+            },
+            sort: true,
+            sortCaret: (order, column) => {
+                if (!order) return (<FaSort/>);
+                else if (order === 'asc') return (<FaSortUp/>);
+                else if (order === 'desc') return (<FaSortDown/>);
+                return null;
             }
         },
     ]
 
-    async function handleTableChange(type, {page, sizePerPage, cellEdit}) {
-        if (cellEdit) {
-            axios.put(`http://localhost:3000/api/admin/orders/${cellEdit.rowId}`, {
-                    //Некоторые поля имеют иерархическое название типа: status.title это нам не подходит, поэтому мы разбиваем строку по точке,
-                    // потому что нам необходима только первая часть (status)
-                    [cellEdit.dataField.split(".")[0]]: cellEdit.newValue,
-                },
-                {withCredentials: true},
-            )
-                .then(res => {
+    async function handleTableChange(type, {page, sizePerPage, cellEdit, sortField, sortOrder,}) {
+        switch (type) {
+            case "cellEdit":
+                axios.put(`/api/admin/orders/${cellEdit.rowId}`, {
+                        //Некоторые поля имеют иерархическое название типа: status.title это нам не подходит, поэтому мы разбиваем строку по точке,
+                        // потому что нам необходима только первая часть (status)
+                        [cellEdit.dataField.split(".")[0]]: cellEdit.newValue,
+                    },
+                )
+                    .then(res => {
 
-                    const responseOrder = res.data.success.payload.order
-                    const resultOrder = {
-                        ...responseOrder,
-                        user: {
+                        const responseOrder = res.data.success.payload.order
+                        const resultOrder = {
                             ...responseOrder,
-                            fullName: `${responseOrder.user.secondName} ${responseOrder.user.firstName} ${responseOrder.user.patronymicName}`
+                            user: {
+                                ...responseOrder,
+                                fullName: `${responseOrder.user.secondName} ${responseOrder.user.firstName} ${responseOrder.user.patronymicName}`
+                            }
                         }
-                    }
-                    setError(null)
-                    setOrders(orders => orders.map(order => order._id === resultOrder._id ? resultOrder : order))
-                })
-                .catch(function (error) {
-                    if (Array.isArray(error.response.data.errors[0].message)) {
-                        setError(error.response.data.errors[0].message[0])
-                        setTimeout(() => setError(null), 2500)
-                    } else {
-                        setError(error.response.data.errors[0].message)
-                        setTimeout(() => setError(null), 2500)
-                    }
+                        setError(null)
+                        setOrders(orders => orders.map(order => order._id === resultOrder._id ? resultOrder : order))
+                    })
+                    .catch(function (error) {
+                        if (Array.isArray(error.response.data.errors[0].message)) {
+                            setError(error.response.data.errors[0].message[0])
+                            setTimeout(() => setError(null), 2500)
+                        } else {
+                            setError(error.response.data.errors[0].message)
+                            setTimeout(() => setError(null), 2500)
+                        }
 
-                })
+                    })
+                break
+            case "sort":
+                setSortField(sortField.split(".")[0])
+                setSortOrder(sortOrder)
+                break
+            default:
+                console.log(type)
         }
+
 
         setPage(parseInt(page))
         setSizePerPage(parseInt(sizePerPage))
     }
 
     async function fetchData(value) {
-        axios.get("http://localhost:3000/api/admin/orders", {
+        axios.get("/api/admin/orders", {
             params: {
                 pageNumber: page,
                 pagination: sizePerPage,
-                search: value
+                search: value,
+                sortParam: {[sortField]: sortOrder},
+                filter: filter
             },
             withCredentials: true,
         })
@@ -150,7 +207,7 @@ const AdminOrders = () => {
                         ...order,
                         user: {
                             ...order.user,
-                            fullName: `${order.user.secondName} ${order.user.firstName} ${order.user.patronymicName}`
+                            fullName: `${order.user?.secondName} ${order.user?.firstName} ${order.user?.patronymicName}`
                         }
                     }
                 })
@@ -158,22 +215,36 @@ const AdminOrders = () => {
                 setTotalSize(res.data.success.payload.totalSize)
             })
             .catch(error => {
-                console.log(error.response.data)
+                console.log(error)
+                console.log(JSON.stringify(error.response))
             })
 
     }
 
+    async function fetchTabOptions() {
+        axios.get(`/api/admin/orders/statuses`, {withCredentials: true}).then((res) => {
+            const optionsToSet = res.data.success.payload.ordresStatuses.map(option => {
+                return {value: option._id, label: option.title}
+            })
+            setTabOptions(optionsToSet)
+        }).catch(err => console.log(err))
+    }
+
     useEffect(() => {
         fetchData()
-    }, [page, sizePerPage])
+        fetchTabOptions()
+    }, [page, sizePerPage, sortField, sortOrder, filter])
 
     const removeHandler = () => {
-        axios.post('/api/admin/orders/deleteOrders', {recordsToDelete: node.selectionContext.selected}, {withCredentials: true}).catch(error => {
-            console.log(error.response.data)
-        })
-        setOrders(orders => {
-            return orders.filter(order => !node.selectionContext.selected.includes(order._id))
-        })
+        const removeConfirm = confirm("Вы уверены, что хотите отказаться от указанных заказов?")
+        if (removeConfirm) {
+            axios.post('/api/admin/orders/deleteOrders', {recordsToDelete: node.selectionContext.selected}, {withCredentials: true}).catch(error => {
+                console.error(error.response.data)
+            })
+            setOrders(orders => {
+                return orders.filter(order => !node.selectionContext.selected.includes(order._id))
+            })
+        }
     }
 
 
@@ -190,12 +261,31 @@ const AdminOrders = () => {
                     <FormControl placeholder={"Поиск"} onChange={e => onTypingSearch(e.target.value)}/>
                 </Col>
             </Row>
-            <Button variant="danger" onClick={removeHandler}>Danger</Button>
+            <div className={"d-flex justify-content-end"}>
+                <Button variant="success" onClick={()=>fetchData()} className={"mr-2"}><FaSyncAlt/></Button>
+                <Button variant="danger" onClick={()=>removeHandler()}><FaTrashAlt/></Button>
+            </div>
+
+            <Nav variant="tabs" defaultActiveKey="all">
+                <Nav.Item>
+                    <Nav.Link eventKey={"all"} onClick={() => setFilter({})}>Все</Nav.Link>
+                </Nav.Item>
+                {
+                    tabOptions.map(tabOption => {
+                        return (
+                            <Nav.Item key={tabOption.value}>
+                                <Nav.Link eventKey={tabOption.value}
+                                          onClick={() => setFilter({status: tabOption.value})}>{tabOption.label}</Nav.Link>
+                            </Nav.Item>
+                        )
+                    })
+                }
+            </Nav>
             <BootstrapTable
                 remote
                 ref={n => setNode(n)}
                 keyField='_id'
-                bodyClasses={'defis'}
+                classes={"cell-style"}
                 data={orders}
                 columns={columns}
                 cellEdit={cellEditFactory({mode: 'click', autoSelectText: true, blurToSave: true, errorMessage: error})}

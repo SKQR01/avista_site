@@ -7,13 +7,13 @@ import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card"
 import Button from "react-bootstrap/Button"
 
-import axios from "axios"
+import axios from "@utils/axios"
 import {withRouter} from "next/router"
 import {useForm} from "react-hook-form"
 import {ErrorMessage} from "@hookform/error-message";
 import Link from "next/link";
-import useUser from "@utils/useUser";
-import FloatInput from "@components/FloatInput";
+
+
 
 
 const SignIn = ({router}) => {
@@ -25,16 +25,15 @@ const SignIn = ({router}) => {
         axios.post('/api/signin', {...data})
             .then(async (res) => {
                 setCommonSuccessMessage(res.data.success.message)
-
                 router.push("/account")
             })
             .catch((err) => {
-                const errors = err.response.data.errors
+                const errors = err.response && err.response.data.errors
                 let message
-                if (errors.length) {
-                    message = err.response.data.errors[0].message
+                if (errors?.length) {
+                    message = err?.response?.data?.errors[0].message
                 } else {
-                    message = err.response.data.errors.message
+                    message = err?.response?.data?.errors?.message
                 }
 
                 console.log(err.response.data.errors[0].message)

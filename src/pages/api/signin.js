@@ -1,15 +1,11 @@
 import {compare} from "bcrypt"
-import jwt from "jsonwebtoken"
+
 
 
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import User from '@models/User'
+import User from './../../models/User'
 
-import {secret} from "@utils/secret"
-import cookie from "cookie"
-import dbErrorCompile from "@utils/dbErrorCompile"
-import {v4 as uuidv4} from "uuid"
 import withSession from "@utils/withSession"
 
 
@@ -27,14 +23,9 @@ export default apiRoutesHandler(
 
                     const isCorrect = await compare(password, user.password)
                     if (isCorrect) {
-                        const sessionId = uuidv4()
-                        user.tokens.addToSet(sessionId)
-                        await user.save()
                         const claims = {
-                            sessionId: sessionId,
                             permissions: user.permissions,
                             userId: user._id,
-                            isLoggedIn: true
                         }
                         req.session.set("authToken", claims)
                         await req.session.save()

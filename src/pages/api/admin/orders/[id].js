@@ -2,7 +2,7 @@ import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerApiFunctions"
-import Order from '@models/Order'
+import Order from './../../../../models/Order'
 
 import validateData, {isEmail, isNubmer, isPhoneNubmer} from "@validation/validator"
 import {orderSchemaValidation} from "@validation/schemes";
@@ -20,7 +20,7 @@ export default apiRoutesHandler(
                     }]
                 })
 
-                const order = await Order.findOne({_id: id}).populate({
+                const order = await Order.findById({_id: id}).populate({
                     path: "user",
                     select: "-permissions -tokens -orders"
                 })

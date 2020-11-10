@@ -1,18 +1,14 @@
-import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
 
-import {verify} from "jsonwebtoken"
-import {secret} from "@utils/secret"
-
-import User from "@models/User"
+import User from "./../../../models/User"
 import dbErrorCompile from "@utils/dbErrorCompile";
 import validateData from "@validation/validator";
-import {withIronSession} from "next-iron-session";
+
 
 import {userSchemaValidation} from "@validation/schemes"
-import withSession from "@utils/withSession";
+
 
 export default apiRoutesHandler({
     GET: callbackHandlerApi([checkAuthentication], async (req, res, session) => {
@@ -22,7 +18,7 @@ export default apiRoutesHandler({
                 }
 
                 const user = await User.findById(session.userId).select("-tokens -permissions -password -__v").lean()
-                return res.json({success:{message:"Вы авторизованы.", payload:{user:{isLoggedIn: true, ...user}}}})
+                return res.json({success:{message:"Вы авторизованы.", payload:{user:{...user}}}})
             } catch (e) {
                 res.status(500).json({errors: [{name: 'common', message: e.message}]})
             }

@@ -9,7 +9,7 @@ import InputGroup from "react-bootstrap/InputGroup"
 
 
 import MainWrapper from "@components/MainWrapper"
-import axios from "axios"
+import axios from "@utils/axios"
 import {useForm} from "react-hook-form"
 import { ErrorMessage } from '@hookform/error-message'
 

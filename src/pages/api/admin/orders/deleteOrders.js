@@ -1,11 +1,10 @@
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import Order from '@models/Order'
+import Order from './../../../../models/Order'
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerApiFunctions"
-import User from "@models/User";
-import verify from "jsonwebtoken/verify";
-import {secret} from "@utils/secret";
+import User from "./../../../../models/User";
+
 import validateData, {isPresentInObject} from "@validation/validator";
 import mongoose from "mongoose";
 
@@ -32,7 +31,9 @@ export default apiRoutesHandler(
                     //https://docs.mongodb.com/manual/reference/operator/update/pull/#remove-all-items-that-equal-a-specified-value
                     await User.updateMany({orders:{$in:recordsToDelete}}, {$pull:{orders:{$in:recordsToDelete}}})
 
-                    await Order.deleteMany({_id: {$in: req.body.recordsToDelete}})
+
+                    //удаляем заказы
+                    await Order.deleteMany({_id: {$in: recordsToDelete}})
                     res.json({success: {name: 'common', message: 'Указанные записи удалены.'}})
                 } catch (e) {
                     console.log(e)

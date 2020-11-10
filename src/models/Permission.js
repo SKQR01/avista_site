@@ -11,7 +11,6 @@ const PermissionSchema = new mongoose.Schema({
 
 
 
-const Permission = mongoose.models.Permission || mongoose.model('Permission', PermissionSchema, "Permission")
-module.exports=Permission
+module.exports=mongoose.models.Permission || mongoose.model('Permission', PermissionSchema)
 
 

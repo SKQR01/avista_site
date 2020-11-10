@@ -1,11 +1,14 @@
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import Order from '@models/Order'
+
 import User from "@models/User"
+import Order from "@models/Order"
+import OrderStatus from "@models/OrderStatus"
+
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
-import verify from "jsonwebtoken/verify"
-import {secret} from "@utils/secret"
+
+
 import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
 
 
@@ -44,12 +47,14 @@ export default apiRoutesHandler(
                     const user = await User.findById(userSession.userId).populate({
                         path: "orders",
                         select: '_id title createdAt status price',
+                        model:Order,
                         options: {
                             sort: {createdAt: -1},
                             skip: toSkip,
                         },
                         populate: {
                             path: "status",
+                            model:OrderStatus
                         }
                     })
 

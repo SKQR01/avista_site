@@ -6,7 +6,7 @@ import ListGroup from "react-bootstrap/ListGroup"
 import Spinner from "react-bootstrap/Spinner"
 import Button from "react-bootstrap/Button"
 
-import axios from "axios"
+import axios from "@utils/axios"
 
 import BootstrapTable from 'react-bootstrap-table-next'
 
@@ -18,13 +18,13 @@ import filterFactory from "react-bootstrap-table2-filter"
 import paginationFactory from "react-bootstrap-table2-paginator"
 import overlayFactory from 'react-bootstrap-table2-overlay'
 
-import tableDateFormatter from "@utils/tableDateFormatter"
+import {tableDateFormatter} from "@utils/tableFormatter"
 import {useRouter} from "next/router"
 
 
 import Link from "next/link"
 import {redirectIfNotAuth} from "@utils/privateRedirects";
-
+import QuestionHelp from "@components/QuestionHelp";
 
 
 const columns = [{
@@ -36,12 +36,13 @@ const columns = [{
     formatter: tableDateFormatter
 }, {
     dataField: 'status.title',
-    text: 'Статус'
+    text: 'Статус',
 }, {
     dataField: 'price',
-    text: 'Цена'
+    text: 'Цена',
 }
 ]
+
 
 const NoDataIndication = () => {
     return (
@@ -67,7 +68,7 @@ const Account = ({user}) => {
     }
 
     async function fetchData() {
-        axios.get("http://localhost:3000/api/user/orders", {
+        axios.get("/api/user/orders", {
             params: {
                 pageNumber: page,
                 pagination: sizePerPage,
@@ -88,7 +89,7 @@ const Account = ({user}) => {
     async function fetchUser() {
         axios.get("/api/user/account").then(res => {
             setUserAccount(res.data.success.payload.user)
-        }).catch(err =>{
+        }).catch(err => {
             console.log(err.response.data)
         })
     }
@@ -96,7 +97,7 @@ const Account = ({user}) => {
     const removeHandler = () => {
         const removeConfirm = confirm("Вы уверены, что хотите отказаться от указанных заказов?")
 
-        if (removeConfirm && node.selectionContext.selected) {
+        if (removeConfirm) {
             axios.post('/api/user/orders/deleteOrders', {recordsToDelete: node.selectionContext.selected}, {withCredentials: true})
             setOrders(orders => {
                 return orders.filter(order => !node.selectionContext.selected.includes(order._id))
@@ -132,15 +133,33 @@ const Account = ({user}) => {
                         <Container fluid>
                             <Card>
                                 <Card.Header
-                                    as={"h1"}>{userAccount?.secondName} {userAccount?.firstName} {userAccount?.patronymicName}</Card.Header>
+                                    as={"h1"}>
+                                    <div className={"d-flex justify-content-between"}>
+                                        {userAccount?.secondName} {userAccount?.firstName} {userAccount?.patronymicName}
+                                        <QuestionHelp
+                                            message={"Это ваши данные, вы можете изменить их, при желании."}/>
+                                    </div>
+                                </Card.Header>
                                 <ListGroup variant="flush">
-                                    <ListGroup.Item>E-mail: {userAccount?.email}</ListGroup.Item>
+                                    <ListGroup.Item>E-mail: {userAccount?.email} </ListGroup.Item>
                                     <ListGroup.Item>Телефон: {userAccount?.phoneNumber}</ListGroup.Item>
+                                    <ListGroup.Item>
+                                        <div className="d-flex">
+                                            <span> Вы можете поменять свои данные &nbsp;</span>
+                                            <Link href={"/account/edit"}>
+                                                <a className={"link"}>здесь</a>
+                                            </Link>.
+                                        </div>
+                                    </ListGroup.Item>
                                     <ListGroup.Item className={"d-flex flex-column"}>
                                         <h4>Хотите поменять пароль?</h4>
-                                        <Link href={"/password-reset"}>
-                                            <a> Вы можете сделать это здесь.</a>
-                                        </Link>
+                                        <div className="d-flex">
+                                            <span>Вы можете сделать это &nbsp;</span>
+                                            <Link href={"/password-reset"}>
+                                                <a className={"link"}> здесь</a>
+                                            </Link>.
+                                        </div>
+
                                     </ListGroup.Item>
                                 </ListGroup>
                             </Card>
@@ -149,7 +168,23 @@ const Account = ({user}) => {
                     <Col md={8}>
                         <Container fluid>
                             <Card>
-                                <Card.Header as={"h3"}>Ваши заказы</Card.Header>
+                                <Card.Header as={"h3"}>
+                                    <div className={"d-flex justify-content-between"}>
+                                        Ваши заказы
+                                        <QuestionHelp
+                                            message={"В этой таблице будут  отображаться ваши текущие заказы."}/>
+                                    </div>
+                                </Card.Header>
+                                <ListGroup variant="flush">
+                                    <ListGroup.Item>
+                                        <div className="d-flex">
+                                            <span> Вы можете сделать новый заказ &nbsp;</span>
+                                            <Link href={"/ordersForm"}>
+                                                <a className={"link"}>здесь</a>
+                                            </Link>.
+                                        </div>
+                                    </ListGroup.Item>
+                                </ListGroup>
                                 <Row className={"justify-content-end pt-3 px-3"}>
                                     <Col sm={4}>
                                         <Button onClick={removeHandler}>Отказаться от выделенных заказов</Button>

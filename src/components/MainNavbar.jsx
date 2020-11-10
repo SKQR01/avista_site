@@ -7,13 +7,26 @@ import Link from "next/link"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import {useRouter} from "next/router";
 
-import useUser from "@utils/useUser"
-import axios from "axios"
+
+import axios from "@utils/axios"
+
+import franchRed from "@images/franchise/1C_Red.svg"
+import avista from "@images/avista.jpg"
+import {useEffect, useState} from "react";
 
 
 
 const MainNavbar = () => {
-    const {user} = useUser()
+    const [user, setUser] = useState()
+    useEffect(() => {
+        axios.get("/api/user/account").then((res) => {
+            setUser(res.data.success.payload.user)
+        }).catch(err=>{
+            console.log(err)
+            console.log(JSON.stringify(err.data, null, 2))
+        })
+    }, [])
+
 
     const router = useRouter()
     return (
@@ -23,8 +36,13 @@ const MainNavbar = () => {
                 <Link href={"/"}>
                     <a>
                         <Navbar.Brand className={"navbar-logo"}>
-                            <div className="mr-2 navbar-logo__image"/>
-                            Ависта 1С
+                            <div className={"d-flex align-items-center"}>
+                                <img src={franchRed} alt={"1C franchise logo"} className="mr-2 navbar-logo__image"/>
+                                <img src={avista} alt={"avista logo"} className="mr-2 navbar-logo__image"/>
+                                Ависта 1C
+                            </div>
+
+
                         </Navbar.Brand>
                     </a>
                 </Link>
@@ -50,7 +68,7 @@ const MainNavbar = () => {
                             </Link>
                             <div className={"ml-md-5"}>
                                 {
-                                    user?.isLoggedIn ?
+                                    user ?
                                         <NavDropdown title="Аккаунт" id="account"
                                                      className={"justify-content-center"}>
 
@@ -86,7 +104,6 @@ const MainNavbar = () => {
                                         </Link>
                                 }
                             </div>
-
 
                         </Nav>
                     </Container>

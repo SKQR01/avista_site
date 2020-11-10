@@ -1,6 +1,6 @@
 import React, {useEffect, useLayoutEffect, useState} from 'react'
 import {useRouter} from "next/router"
-import axios from "axios"
+import axios from "@utils/axios"
 import {redirectIfNotAuth} from "@utils/privateRedirects";
 import MainWrapper from "@components/MainWrapper";
 import Card from "react-bootstrap/Card";
@@ -14,7 +14,7 @@ const UserOrder = () => {
 
     useEffect(() => {
         if(router.query.id){
-            axios.get(`/api/user/orders/${router.query.id}`, {withCredentials:true}).then((res) => {
+            axios.get(`/api/user/orders/${router.query.id}`).then((res) => {
                 setOrder(res.data.success.payload.order)
             }).catch(err => console.log(err))
         }
@@ -50,9 +50,6 @@ const UserOrder = () => {
                 </Col>
             </Row>
             }
-
-
-            <pre>{order ? JSON.stringify(order, null, 4) : "Заказ не найден."}</pre>
         </MainWrapper>
 
     )
