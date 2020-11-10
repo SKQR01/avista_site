@@ -1,6 +1,6 @@
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import Order from './../../../../models/Order'
+import User from "@models/User"
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerApiFunctions"
 import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
@@ -8,7 +8,7 @@ import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
 
 export default apiRoutesHandler(
     withDb({
-            GET: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res) => {
+            GET: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res, session) => {
                 try {
 
                     const validationSchema = {
@@ -30,21 +30,20 @@ export default apiRoutesHandler(
                     const pagination = parseInt(req.query.pagination)
 
                     //Не знаю почему, но без JSON.parse не хочет работать (видимо нужен конкретно JS объект)
-                    const sortParameter = req.query.sortParam ? JSON.parse(req.query.sortParam) :  {createdAt: 'desc'}
-                    const filterParameter = req.query.filter ? JSON.parse(req.query.filter) :  {}
+                    const sortParameter = req.query.sortParam ? JSON.parse(req.query.sortParam) : {createdAt: 'desc'}
 
-                    if(!req.query.search){
-                        const orders = await Order.find(filterParameter).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
-                        const totalSize = await Order.countDocuments()
+                    if (!req.query.search) {
+                        const users = await User.find({_id:{$ne:session.userId}}).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).lean()
+                        const totalSize = await User.countDocuments()
 
-                        return res.json({success: {name: "common", payload: {orders:orders, totalSize:totalSize}}})
+                        return res.json({success: {name: "common", payload: {users: users, totalSize: totalSize}}})
                     }
 
-                    const orders = await Order.find({$text: {$search: req.query.search}, filterParameter}).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
-                    const totalSize = orders.length
+                    const users = await User.find({$text: {$search: req.query.search}, _id:{$ne:session.userId}}).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).lean()
+                    const totalSize = users.length
 
 
-                    res.json({success: {name: "common", payload:  {orders:orders, totalSize:totalSize}}})
+                    res.json({success: {name: "common", payload: {users: users, totalSize: totalSize}}})
                 } catch (e) {
                     res.status(500).json({errors: [{name: 'common', message: e.message}]})
                 }

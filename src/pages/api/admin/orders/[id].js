@@ -20,7 +20,7 @@ export default apiRoutesHandler(
                     }]
                 })
 
-                const order = await Order.findOne({_id: id}).populate({
+                const order = await Order.findById({_id: id}).populate({
                     path: "user",
                     select: "-permissions -tokens -orders"
                 })

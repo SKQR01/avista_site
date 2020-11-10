@@ -5,9 +5,9 @@ import Order from '../../../../models/Order'
 import User from './../../../../models/User'
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
-import {secret} from "@utils/secret"
+
 import validateData, {isPresentInObject} from "@validation/validator"
-import mongoose from "mongoose"
+
 
 
 export default apiRoutesHandler(
@@ -28,20 +28,9 @@ export default apiRoutesHandler(
                     if (potenitalErrors.length !== 0) return res.status(422).json({errors: potenitalErrors})
 
                     let {recordsToDelete} = req.body
-                    // recordsToDelete = recordsToDelete.map(recordToDelete => mongoose.Types.ObjectId(recordToDelete))
 
 
-                    // const user = await User.findByIdAndUpdate(session.userId, {$set: {$pullAll: {orders: recordsToDelete}}} )//Находим пользователя и удаляем заказы из его массива заказов
-                    //Находим пользователя и удаляем заказы из его массива заказов
-                    const user = await User.findById(session.userId)
-                    user.orders = user.orders.filter(order =>  {
-                        if(!recordsToDelete.includes(order)) {
-                            return order
-                        }
-
-                    })
-                    await user.save()
-
+                    const user = await User.findByIdAndUpdate(session.userId, {$pull:{orders:{$in:recordsToDelete}}})//Находим пользователя и удаляем заказы из его массива заказов
 
                     //удаляем заказы
                     await Order.deleteMany({_id: {$in: recordsToDelete}, user: user._id})

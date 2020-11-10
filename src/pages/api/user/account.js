@@ -18,7 +18,7 @@ export default apiRoutesHandler({
                 }
 
                 const user = await User.findById(session.userId).select("-tokens -permissions -password -__v").lean()
-                return res.json({success:{message:"Вы авторизованы.", payload:{user:{isLoggedIn: true, ...user}}}})
+                return res.json({success:{message:"Вы авторизованы.", payload:{user:{...user}}}})
             } catch (e) {
                 res.status(500).json({errors: [{name: 'common', message: e.message}]})
             }

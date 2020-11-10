@@ -56,16 +56,19 @@ const SignUp = () => {
     }
 
     const onSubmit = (data) => {
-        axios.post("/api/signup", {...data}).then(res => {
-            setCommonSuccessMessage(res.data.success.message)
-            router.push("/account")
-        }).catch(err => {
-            if (err.response.data.errors[0].name !== "common") {
-                err.response.data.errors.map(error => setError(error.name, {message:error.message, type:"server"}))
-            } else {
-                setCommonErrorMessage(err.response.data.errors[0].message)
-            }
-        })
+        console.log(data)
+        // axios.post("/api/signup", {...data}).then(res => {
+        //     setCommonErrorMessage("")
+        //     setCommonSuccessMessage(res.data.success.message)
+        //     router.push("/account")
+        // }).catch(err => {
+        //     console.log(err.response.data.errors)
+        //     if (err.response.data.errors[0].name !== "common") {
+        //         err.response.data.errors.map(error => setError(error.name, {message:error.message, type:"server"}))
+        //     } else {
+        //         setCommonErrorMessage(err.response.data.errors[0].message)
+        //     }
+        // })
     }
     return (
         <MainWrapper>
@@ -152,7 +155,10 @@ const SignUp = () => {
                                              ref={register(
                                                  {
                                                      required: true,
-                                                     pattern: passwordRegexp
+                                                     pattern: {
+                                                         value:passwordRegexp,
+                                                         message: customErrors.password.pattern
+                                                     }
                                                  }
                                              )}
                                 />

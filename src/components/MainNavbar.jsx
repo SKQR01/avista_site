@@ -7,7 +7,7 @@ import Link from "next/link"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import {useRouter} from "next/router";
 
-import useUser from "@utils/useUser"
+
 import axios from "@utils/axios"
 
 import franchRed from "@images/franchise/1C_Red.svg"

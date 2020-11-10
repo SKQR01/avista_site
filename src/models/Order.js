@@ -22,6 +22,7 @@ const OrderSchema = new mongoose.Schema({
         status: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "OrderStatus",
+            required: [true, "Заказ должен иметь статус."],
         },
         price: {
             type: Number,
@@ -33,13 +34,6 @@ const OrderSchema = new mongoose.Schema({
 
 OrderSchema.index({title: 'text', description: 'text'})
 
-// const Order = mongoose.models.Order || mongoose.model('Order', OrderSchema, "Order")
-// let Order
-// try {
-//     Order = mongoose.model("Order");
-// } catch {
-//     Order = mongoose.model("Order", OrderSchema, "Order");
-// }
 
 module.exports = mongoose.models.Order || mongoose.model('Order', OrderSchema)
 

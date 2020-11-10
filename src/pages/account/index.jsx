@@ -97,7 +97,7 @@ const Account = ({user}) => {
     const removeHandler = () => {
         const removeConfirm = confirm("Вы уверены, что хотите отказаться от указанных заказов?")
 
-        if (removeConfirm && node.selectionContext.selected) {
+        if (removeConfirm) {
             axios.post('/api/user/orders/deleteOrders', {recordsToDelete: node.selectionContext.selected}, {withCredentials: true})
             setOrders(orders => {
                 return orders.filter(order => !node.selectionContext.selected.includes(order._id))

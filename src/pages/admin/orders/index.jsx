@@ -15,8 +15,8 @@ import Row from "react-bootstrap/Row"
 import FormControl from "react-bootstrap/FormControl"
 import Col from "react-bootstrap/Col"
 import {tableDateFormatter} from "@utils/tableFormatter"
-import {FaSortUp, FaSortDown, FaSort} from 'react-icons/fa';
-import Nav from "react-bootstrap/Nav";
+import {FaSortUp, FaSortDown, FaSort, FaTrashAlt, FaSyncAlt} from 'react-icons/fa'
+import Nav from "react-bootstrap/Nav"
 
 
 const NoDataIndication = () => {
@@ -164,7 +164,6 @@ const AdminOrders = () => {
                             }
                         }
                         setError(null)
-                        // console.log(resultOrder)
                         setOrders(orders => orders.map(order => order._id === resultOrder._id ? resultOrder : order))
                     })
                     .catch(function (error) {
@@ -208,7 +207,7 @@ const AdminOrders = () => {
                         ...order,
                         user: {
                             ...order.user,
-                            fullName: `${order.user.secondName} ${order.user.firstName} ${order.user.patronymicName}`
+                            fullName: `${order.user?.secondName} ${order.user?.firstName} ${order.user?.patronymicName}`
                         }
                     }
                 })
@@ -237,12 +236,15 @@ const AdminOrders = () => {
     }, [page, sizePerPage, sortField, sortOrder, filter])
 
     const removeHandler = () => {
-        axios.post('/api/admin/orders/deleteOrders', {recordsToDelete: node.selectionContext.selected}, {withCredentials: true}).catch(error => {
-            console.error(error.response.data)
-        })
-        setOrders(orders => {
-            return orders.filter(order => !node.selectionContext.selected.includes(order._id))
-        })
+        const removeConfirm = confirm("Вы уверены, что хотите отказаться от указанных заказов?")
+        if (removeConfirm) {
+            axios.post('/api/admin/orders/deleteOrders', {recordsToDelete: node.selectionContext.selected}, {withCredentials: true}).catch(error => {
+                console.error(error.response.data)
+            })
+            setOrders(orders => {
+                return orders.filter(order => !node.selectionContext.selected.includes(order._id))
+            })
+        }
     }
 
 
@@ -259,10 +261,14 @@ const AdminOrders = () => {
                     <FormControl placeholder={"Поиск"} onChange={e => onTypingSearch(e.target.value)}/>
                 </Col>
             </Row>
-            <Button variant="danger" onClick={removeHandler}>Danger</Button>
+            <div className={"d-flex justify-content-end"}>
+                <Button variant="success" onClick={()=>fetchData()} className={"mr-2"}><FaSyncAlt/></Button>
+                <Button variant="danger" onClick={()=>removeHandler()}><FaTrashAlt/></Button>
+            </div>
+
             <Nav variant="tabs" defaultActiveKey="all">
                 <Nav.Item>
-                    <Nav.Link eventKey={"all"} onClick={() => setFilter({})}>Все</Nav.Link  >
+                    <Nav.Link eventKey={"all"} onClick={() => setFilter({})}>Все</Nav.Link>
                 </Nav.Item>
                 {
                     tabOptions.map(tabOption => {

@@ -4,6 +4,7 @@ const uniqueValidator = require("mongoose-unique-validator")
 
 const config = require("../../config")
 const Permission = require("./Permission")
+const Order = require("./Order")
 
 
 const UserSchema = new mongoose.Schema({
@@ -70,9 +71,9 @@ UserSchema.pre('save', function (next) {
     })
 })
 
-
 UserSchema.plugin(uniqueValidator)
 
+UserSchema.index({email: 'text', phoneNumber: 'text', firstName: "text", secondName: "text", patronymicName: "text"})
 
 module.exports = mongoose.models.User || mongoose.model('User', UserSchema)
 

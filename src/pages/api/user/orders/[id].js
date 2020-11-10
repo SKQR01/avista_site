@@ -7,7 +7,7 @@ import callbackHandlerApi from "@utils/callbackHandlerApi";
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
 
 
-import {secret} from "@utils/secret"
+
 
 
 export default apiRoutesHandler(

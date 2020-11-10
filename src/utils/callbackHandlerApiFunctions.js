@@ -21,9 +21,12 @@ import User from "./../models/User"
 export async function checkAuthentication(req, session) {
     if (session) {
         const user = await User.findById(session?.userId)
+        if(!user){
+            req.session.destroy()
+            return "Вы, не авторизованы. Авторизуйтесь, а после этого попробуйте ещё раз."
+        }
         return !(!!user)
     }
-    return "Вы, не авторизованы. Авторизуйтесь, а после этого попробуйте ещё раз."
 }
 
 export async function checkAdminPermission(req, session) {

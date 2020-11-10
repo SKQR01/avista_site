@@ -6,7 +6,8 @@ const callbackHandlerApi = (callbackFunctions, routeApiHandler) => withSession(a
     for (let i = 0; i < callbackFunctions.length; i++) {
         const message = await callbackFunctions[i](req, userSession)
         if (message) {
-            return res.status(403).json({
+            res.setHeader('location', '/signin')
+            return res.status(302).json({
                 errors: [{
                     name: 'common',
                     message: message

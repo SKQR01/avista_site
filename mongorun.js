@@ -1,9 +1,5 @@
 const mongoose = require('mongoose')
 
-const { createServer } = require('http')
-const { parse } = require('url')
-const next = require('next')
-
 //При импорте происходит инициализация схем в БД (тот самый try/catch)
 const OrderStatus = require('./src/models/OrderStatus')
 const Permission = require('./src/models/Permission')
@@ -23,7 +19,6 @@ const createPermissions = async permissions => {
     console.log('Было найдено право: ', foundedPermission)
     if (!foundedPermission) {
       const createdPermission = await Permission.create(permissions[key])
-      await createdPermission.save()
       console.log('Было создано право: ', createdPermission)
     }
   }
@@ -42,7 +37,6 @@ const createOrderStatuses = async orderStatuses => {
     console.log('Был найден статус: ', foundedOrderStatus)
     if (!foundedOrderStatus) {
       const createdOrderStatus = await OrderStatus.create(orderStatuses[key])
-      await createdOrderStatus.save()
       console.log('Был создан статус заказа: ', createdOrderStatus)
     }
   }

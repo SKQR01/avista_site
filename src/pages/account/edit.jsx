@@ -6,13 +6,13 @@ import {ErrorMessage} from "@hookform/error-message"
 import Container from "react-bootstrap/Container"
 import Button from "react-bootstrap/Button"
 import axios from "@utils/axios";
-import useUser from "@utils/useUser";
-import {useRouter} from "next/router";
+
+import {useRouter} from "next/router"
 import MainWrapper from "@components/MainWrapper"
-import {redirectIfNotAuth} from "@utils/privateRedirects";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
+import {redirectIfNotAuth} from "@utils/privateRedirects"
+import Col from "react-bootstrap/Col"
+import Card from "react-bootstrap/Card"
+import Row from "react-bootstrap/Row"
 
 
 const removeEqualsObjectFields = (newObj, oldObj) => {
@@ -29,7 +29,6 @@ const EditAccount = () => {
     const [commonErrorMessage, setCommonErrorMessage] = useState()
 
 
-    useUser({redirectTo: "/signin"})
     const router = useRouter()
 
 
