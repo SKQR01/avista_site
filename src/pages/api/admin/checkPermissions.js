@@ -11,7 +11,7 @@ export default apiRoutesHandler(
     withDb({
         GET: callbackHandlerApi([checkAuthentication], async (req, res, session) => {
             try {
-                const user = await User.findById(session.userId).populate("permissions")
+                const user = await User.findById(session.userId).populate({path:"permissions", model:Permission})
                 if (!user) return res.status(404).json({errors: {name: "common", message: "Пользователь не найден."}})
 
                 const userHavePermissions = user.permissions.find(permission => {

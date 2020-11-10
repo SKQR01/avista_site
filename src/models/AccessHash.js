@@ -16,14 +16,7 @@ const AccessHashSchema = new mongoose.Schema({
         timestamps: true
     })
 
-// const AccessHash = mongoose.models.AccessHash || mongoose.model('AccessHash', AccessHashSchema, "AccessHash")
-// const AccessHash = mongoose.model('AccessHash', AccessHashSchema, "AccessHash")
-// let AccessHash
-// try {
-//     AccessHash = mongoose.model("AccessHash")
-// } catch {
-//     AccessHash = mongoose.model("AccessHash", AccessHashSchema, "AccessHash");
-// }
+
 
 module.exports = mongoose.models.AccessHash || mongoose.model('AccessHash', AccessHashSchema)
 
