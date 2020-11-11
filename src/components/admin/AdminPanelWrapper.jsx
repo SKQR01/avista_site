@@ -11,10 +11,12 @@ const AdminPanelWrapper = ({children}) => {
     const router = useRouter()
 
     return (
-        <div>
+        <div
+            // className={"admin-nav"}
+        >
             <Row>
                 <Col sm={12} md={2} >
-                    <div className={"admin-nav"} >
+                    <div className={"shadow admin-nav p-sm-3 p-md-0"} >
                         <Nav defaultActiveKey="/home" className="d-flex flex-column" fill>
                             <Nav.Link onClick={()=>router.push("/admin")}>Стартовая</Nav.Link>
                             <Nav.Link onClick={()=>router.push("/admin/orders")}>Заказы</Nav.Link>

@@ -32,6 +32,7 @@ export default apiRoutesHandler(
                     //Не знаю почему, но без JSON.parse не хочет работать (видимо нужен конкретно JS объект)
                     const sortParameter = req.query.sortParam ? JSON.parse(req.query.sortParam) : {createdAt: 'desc'}
 
+
                     if (!req.query.search) {
                         const users = await User.find({_id:{$ne:session.userId}}).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).lean()
                         const totalSize = await User.countDocuments()

@@ -181,13 +181,16 @@ const AdminOrders = () => {
                 setSortField(sortField.split(".")[0])
                 setSortOrder(sortOrder)
                 break
+            case "pagination":
+                setPage(parseInt(page))
+                setSizePerPage(parseInt(sizePerPage))
+                break
             default:
                 console.log(type)
         }
 
 
-        setPage(parseInt(page))
-        setSizePerPage(parseInt(sizePerPage))
+
     }
 
     async function fetchData(value) {
@@ -256,12 +259,15 @@ const AdminOrders = () => {
 
     return (
         <AdminPanelWrapper>
-            <Row>
-                <Col sm={12} md={8} className={"p-5"}>
+            <Row className={"pt-5"}>
+                <Col sm={12} md={8}>
+                    <h2>
+                        Заказы
+                    </h2>
                     <FormControl placeholder={"Поиск"} onChange={e => onTypingSearch(e.target.value)}/>
                 </Col>
             </Row>
-            <div className={"d-flex justify-content-end"}>
+            <div className={"d-flex justify-content-end py-3"}>
                 <Button variant="success" onClick={()=>fetchData()} className={"mr-2"}><FaSyncAlt/></Button>
                 <Button variant="danger" onClick={()=>removeHandler()}><FaTrashAlt/></Button>
             </div>

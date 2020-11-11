@@ -13,6 +13,7 @@ import {NextSeo} from "next-seo";
 import {emailRegexp} from "@validation/regexps";
 import {ErrorMessage} from "@hookform/error-message";
 import Container from "react-bootstrap/Container";
+import Alert from "react-bootstrap/Alert";
 
 
 const PasswordReset = () => {
@@ -46,8 +47,18 @@ const PasswordReset = () => {
                 }}
             />
             <div>
-                {commonSuccessMessage && commonSuccessMessage}
-                {commonErrorMessage && commonErrorMessage}
+                {commonSuccessMessage &&
+                <Alert variant={"success"}>
+                    {commonSuccessMessage}
+                </Alert>
+                }
+
+
+                {commonErrorMessage &&
+                <Alert variant={"danger"}>
+                    {commonErrorMessage}
+                </Alert>
+                }
                 <Row className={"justify-content-center align-items-center"} style={{height: "70vh"}}>
                     <Col sm={7} md={6} lg={4}>
                         <Card className={"p-3 pt-5 pb-5 shadow"}>

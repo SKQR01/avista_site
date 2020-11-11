@@ -11,16 +11,17 @@ import FormControl from "react-bootstrap/FormControl"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import {ErrorMessage} from "@hookform/error-message"
-import Card from "react-bootstrap/Card"
-import ListGroup from "react-bootstrap/ListGroup"
+
 import {redirectIfNotAdmin} from "@utils/privateRedirects";
 import BootstrapTable from "react-bootstrap-table-next";
-import cellEditFactory, {Type} from "react-bootstrap-table2-editor";
+
 import filterFactory from "react-bootstrap-table2-filter";
-import paginationFactory from "react-bootstrap-table2-paginator";
+import paginationFactory from "react-bootstrap-table2-paginator"
+
 import AdminPanelWrapper from "@components/admin/AdminPanelWrapper";
 import {FaSort, FaSortDown, FaSortUp, FaSyncAlt, FaTrashAlt} from "react-icons/fa";
 import {tableDateFormatter} from "@utils/tableFormatter";
+import Alert from "react-bootstrap/Alert";
 
 
 
@@ -42,16 +43,28 @@ const AdminOrders = () => {
     const [sizePerPage, setSizePerPage] = useState(10)
     const [node, setNode] = useState()
 
+    const [sortField, setSortField] = useState("createdAt")
+    const [sortOrder, setSortOrder] = useState("desc")
+    const [totalSize, setTotalSize] = useState(0)
+
     useEffect(() => {
         if (router.query.id) {
-            axios.get(`/api/admin/users/${router.query.id}`, {withCredentials: true}).then((res) => {
+            axios.get(`/api/admin/users/${router.query.id}`, {
+                params:{
+                    pageNumber: page,
+                    pagination: sizePerPage,
+                    sortParam: {[sortField]: sortOrder},
+                }
+            }).then((res) => {
 
                 reset(res.data.success.payload.user)
+                setTotalSize(res.data.success.payload.totalSize)
                 setUser(res.data.success.payload.user)
+                set
             }).catch(err => console.log(err))
         }
-
-    }, [router])
+        console.log(page)
+    }, [router, page, sizePerPage])
 
 
     const onSubmit = (data, e) => {
@@ -81,11 +94,26 @@ const AdminOrders = () => {
         }
     }
 
+    const handleTableChange = (type, {page, sizePerPage, sortField, sortOrder,}) => {
+        switch (type) {
+            case "sort":
+                setSortField(sortField.split(".")[0])
+                setSortOrder(sortOrder)
+                break
+            case "pagination":
+                setSizePerPage(sizePerPage)
+                setPage(page)
+                break
+            default:
+                console.log(type)
+        }
+
+    }
+
     const columns = [
         {
             dataField: '_id',
             text: 'ID заказа',
-            editable: false,
             sort: true,
             sortCaret: (order, column) => {
                 if (!order) return (<FaSort/>);
@@ -97,7 +125,6 @@ const AdminOrders = () => {
         {
             dataField: 'title',
             text: 'Тема заказа',
-            editable: false,
             sort: true,
             sortCaret: (order, column) => {
                 if (!order) return (<FaSort/>);
@@ -146,13 +173,24 @@ const AdminOrders = () => {
             router.push({pathname: `/admin/orders/${row._id}`, query: {id: row._id}})
         },
     }
+
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Container fluid className={"pb-4"}>
                     <Container fluid className={"pb-4"}>
-                        {commonSuccessMessage && commonSuccessMessage}
-                        {commonErrorMessage && commonErrorMessage}
+                        {commonSuccessMessage &&
+                        <Alert variant={"success"}>
+                            {commonSuccessMessage}
+                        </Alert>
+                        }
+
+
+                        {commonErrorMessage &&
+                        <Alert variant={"danger"}>
+                            {commonErrorMessage}
+                        </Alert>
+                        }
                         <h2 className={"pb-3"}>О пользователе</h2>
                         <h3 className={"pb-3"}>ID:{user?._id}</h3>
                         <h3 className={"pt-2"}>ФИО</h3>
@@ -221,8 +259,9 @@ const AdminOrders = () => {
                         classes={"cell-style"}
                         data={user?.orders || []}
                         columns={columns}
+                        onTableChange={handleTableChange}
                         filter={filterFactory()}
-                        pagination={paginationFactory({page, sizePerPage, totalSize:user?.orders.length})}
+                        pagination={paginationFactory({page, sizePerPage, totalSize:totalSize})}
                         noDataIndication={() => <NoDataIndication/>}
                         selectRow={
                             {

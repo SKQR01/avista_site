@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 import InputGroup from "react-bootstrap/InputGroup"
 import FormControl from "react-bootstrap/FormControl"
 import Container from "react-bootstrap/Container"
@@ -12,14 +12,17 @@ import {withRouter} from "next/router"
 import {useForm} from "react-hook-form"
 import {ErrorMessage} from "@hookform/error-message";
 import Link from "next/link";
-
-
+import Alert from "react-bootstrap/Alert";
 
 
 const SignIn = ({router}) => {
     const {register, handleSubmit, errors, setError} = useForm()
     const [commonErrorMessage, setCommonErrorMessage] = useState()
     const [commonSuccessMessage, setCommonSuccessMessage] = useState()
+
+    useEffect(() => {
+        setCommonSuccessMessage(router.query?.message ? router.query?.message : '')
+    }, [])
 
     const onSubmit = (data) => {
         axios.post('/api/signin', {...data})
@@ -36,7 +39,7 @@ const SignIn = ({router}) => {
                     message = err?.response?.data?.errors?.message
                 }
 
-                console.log(err.response.data.errors[0].message)
+                console.log(err.response?.data?.errors[0])
                 message && setCommonErrorMessage(message)
                 setCommonErrorMessage(message)
             })
@@ -55,8 +58,18 @@ const SignIn = ({router}) => {
 
                                 <h2 className={"pb-5"} style={{textAlign: "center"}}>Авторизация</h2>
                                 <div className={"pb-3"}>
-                                    {commonErrorMessage && commonErrorMessage}
-                                    {commonSuccessMessage && commonSuccessMessage}
+                                    {commonSuccessMessage &&
+                                    <Alert variant={"success"}>
+                                        {commonSuccessMessage}
+                                    </Alert>
+                                    }
+
+
+                                    {commonErrorMessage &&
+                                    <Alert variant={"danger"}>
+                                        {commonErrorMessage}
+                                    </Alert>
+                                    }
                                     {errors.name && errors.name.type === "required" && <span>This is required</span>}
                                     <ErrorMessage errors={errors} name={"email"}/>
                                     <FormControl

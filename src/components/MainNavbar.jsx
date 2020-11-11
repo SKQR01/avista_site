@@ -23,7 +23,7 @@ const MainNavbar = () => {
             setUser(res.data.success.payload.user)
         }).catch(err=>{
             console.log(err)
-            console.log(JSON.stringify(err.data, null, 2))
+            console.log(JSON.stringify(err?.data, null, 2))
         })
     }, [])
 
@@ -51,26 +51,12 @@ const MainNavbar = () => {
                 <Navbar.Collapse id="responsive-navbar-nav " className="justify-content-end">
                     <Container>
                         <Nav className={"w-100 justify-content-md-end main-navbar"}>
-                            <Link href={"/company"}>
-                                <Nav.Link href={"/company"} className={"main-navbar__item"}>
-                                    О компании
-                                </Nav.Link>
-                            </Link>
-                            <Link href={"/service"}>
-                                <Nav.Link href={"/service"} className={"main-navbar__item"}>
-                                    Об услугах
-                                </Nav.Link>
-                            </Link>
-                            <Link href={"/products"}>
-                                <Nav.Link href={"/products"} className={"main-navbar__item "}>
-                                    О товарах
-                                </Nav.Link>
-                            </Link>
-                            <div className={"ml-md-5"}>
+                            <div className={"d-flex mr-md-5 justify-content-center align-items-center"} >
                                 {
                                     user ?
                                         <NavDropdown title="Аккаунт" id="account"
-                                                     className={"justify-content-center"}>
+                                                     className={"text-center"}
+                                        >
 
                                             <NavDropdown.Item eventKey="account"
                                                               onClick={() => router.push("/account")}>
@@ -104,6 +90,28 @@ const MainNavbar = () => {
                                         </Link>
                                 }
                             </div>
+                            <Nav.Item>
+                            <Link href={"/company"}>
+                                <Nav.Link href={"/company"} className={"main-navbar__item"}>
+                                    О компании
+                                </Nav.Link>
+                            </Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                            <Link href={"/service"}>
+                                <Nav.Link href={"/service"} className={"main-navbar__item"}>
+                                    Об услугах
+                                </Nav.Link>
+                            </Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                            <Link href={"/products"}>
+                                <Nav.Link href={"/products"} className={"main-navbar__item "}>
+                                    О товарах
+                                </Nav.Link>
+                            </Link>
+                            </Nav.Item>
+
 
                         </Nav>
                     </Container>

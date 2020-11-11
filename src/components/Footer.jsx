@@ -6,24 +6,24 @@ import Col from "react-bootstrap/Col";
 
 const Footer = () => {
     return (
-        // <footer>
-        <Card className={"footer shadow justify-content-around"}>
-            <Row className={"d-flex"}>
-                <Col sm={6} className={"text-center p-3"}>
-                    624130
-                    <br/>
-                    Свердловская область, г. Новоуральск, ул. Фрунзе 7 - офис 204
-                </Col>
-                <Col sm={6} className={"text-center p-3"}>
-                    8(34370) 7-87-87
-                    <br/>
-                    whatsapp: +7(965)547-66-13
-                    <br/>
-                    avista-1c@yandex.ru
-                </Col>
-            </Row>
+
+        <Card className={"d-flex flex-sm-column flex-md-row footer shadow p-3"}>
+            <div className={"d-flex align-items-center justify-content-center text-center w-100 p-3"}>
+                624130
+                <br/>
+                Свердловская область, г. Новоуральск, ул. Фрунзе 7 - офис 204
+            </div>
+            <div className={"d-flex align-items-center justify-content-center text-center w-100 p-3"}>
+                8(34370) 7-87-87
+                <br/>
+                whatsapp: +7(965)547-66-13
+                <br/>
+                avista-1c@yandex.ru
+            </div>
+
+
         </Card>
-            // </footer>
+
     )
 }
 

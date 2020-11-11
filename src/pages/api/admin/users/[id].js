@@ -5,7 +5,7 @@ import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerA
 import User from '@models/User'
 import Order from '@models/Order'
 
-import validateData, {isEmail, isNubmer, isPhoneNubmer} from "@validation/validator"
+import validateData, {isEmail, isNubmer, isPhoneNubmer, isPresentInObject} from "@validation/validator"
 import {orderSchemaValidation} from "@validation/schemes";
 import OrderStatus from "@models/OrderStatus";
 
@@ -19,12 +19,13 @@ export default apiRoutesHandler(
                             errors: {
                                 name: "Common",
                                 message: "Вы не авторизованы.",
-                                payload: {user: {isLoggedIn: false}}
                             }
                         })
                     }
 
                     const {query: {id}} = req
+
+
                     if (!id) return res.status(403).json({
                         errors: [{
                             name: 'common',
@@ -32,17 +33,44 @@ export default apiRoutesHandler(
                         }]
                     })
 
-                    const user = await User.findById(id).select("-permissions -password -__v").populate(
+                    const validationSchema = {
+                        pageNumber: {
+                            callback: [isPresentInObject, isNubmer],
+                            errorMessage: ["Укажите номер страницы в параметрах запроса.", "Номер страницы должен быть целочисленным значением."]
+                        },
+                        pagination: {
+                            callback: [isPresentInObject, isNubmer],
+                            errorMessage: ["Укажите кол-во записей на одну страницу в параметрах запроса.", "Кол-во записей на одну страницу должно быть быть целочисленным значением."]
+                        }
+                    }
+
+                    const potentialErrors = validateData(req.query, validationSchema)
+                    if (potentialErrors.length !== 0) return res.status(422).json({errors: potentialErrors})
+
+                    const pageNumber = parseInt(req.query.pageNumber)-1
+                    const pagination = parseInt(req.query.pagination)
+                    const sortParameter = req.query.sortParam ? JSON.parse(req.query.sortParam) : {createdAt: 'desc'}
+
+                    const usersOrders = await User.findById(id).select("orders").lean()
+                    const totalSize = usersOrders.orders.length
+
+                    const userRes = await User.findById(id).select("-__v -status -permissions").populate(
                         {
                             path:"orders",
                             model:Order,
+                            options:{
+                                sort: sortParameter,
+                                skip:pagination*pageNumber,
+                                limit:pagination,
+                            },
                             populate: {
                                 path: "status",
-                                model:OrderStatus
+                                model:OrderStatus,
                             }
                         }).lean()
-                    return res.json({success: {name: "common", payload: {user: user}}})
+                    return res.json({success: {name: "common", payload: {user: userRes, totalSize:totalSize}}})
                 } catch (e) {
+                    console.log(e)
                     res.status(500).json({errors: [{name: 'common', message: e.message}]})
                 }
             }
