@@ -191,7 +191,7 @@ const AdminUsers = () => {
                     <FormControl placeholder={"Поиск"} onChange={e => onTypingSearch(e.target.value)}/>
                 </Col>
             </Row>
-            <div className={"d-flex justify-content-end"}>
+            <div className={"d-flex justify-content-end py-3"}>
                 <Button variant="success" onClick={()=>fetchData()} className={"mr-2"}><FaSyncAlt/></Button>
                 <Button variant="danger" onClick={()=>removeHandler()}><FaTrashAlt/></Button>
             </div>

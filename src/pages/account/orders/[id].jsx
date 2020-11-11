@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 const UserOrder = () => {
     const router = useRouter()
     const [order, setOrder] = useState()
-
+    console.log(order)
     useEffect(() => {
         if(router.query.id){
             axios.get(`/api/user/orders/${router.query.id}`).then((res) => {
@@ -29,7 +29,7 @@ const UserOrder = () => {
                         <h2 ><b>Ваш заказ № {order._id}</b></h2>
                         <hr className={"py-1"}/>
                         <div className={"pb-2"}>
-                            <h4><b>Статус:</b> {order.status}</h4>
+                            <h4><b>Статус:</b> {order.status?.title}</h4>
                         </div>
                         <hr className={"py-2"}/>
 

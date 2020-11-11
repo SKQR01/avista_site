@@ -9,6 +9,7 @@ import '@styles/components/admin.scss'
 import '@styles/components/FloatInput.scss'
 import '@styles/components/footer.scss'
 import "@styles/components/table.scss"
+import "@styles/components/products.scss"
 
 const TIMEOUT = 500
 

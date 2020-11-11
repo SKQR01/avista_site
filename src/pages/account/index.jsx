@@ -129,7 +129,7 @@ const Account = ({user}) => {
         <MainWrapper>
             <Container className={"p-4"} fluid>
                 <Row>
-                    <Col md={4}>
+                    <Col md={4} className={"pb-3"}>
                         <Container fluid>
                             <Card>
                                 <Card.Header
@@ -215,7 +215,7 @@ const Account = ({user}) => {
                                             }
                                         })}
                                         filter={filterFactory()}
-                                        pagination={paginationFactory({page, sizePerPage, ...orders})}
+                                        pagination={paginationFactory({page, sizePerPage, totalSize})}
                                         onTableChange={handleTableChange}
                                         noDataIndication={() => <NoDataIndication/>}
                                     />

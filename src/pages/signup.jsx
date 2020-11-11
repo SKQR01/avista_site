@@ -9,10 +9,11 @@ import MainWrapper from "@components/MainWrapper"
 import FormControl from "react-bootstrap/FormControl"
 import {Container} from "react-bootstrap"
 import {useForm} from "react-hook-form"
-import {useState} from "react"
+import React, {useState} from "react"
 
 import {phoneNumberRegexp, emailRegexp, cyrillicOrLateinschriftRegexp, passwordRegexp} from "@validation/regexps"
 import {useRouter} from "next/router";
+import Alert from "react-bootstrap/Alert";
 
 
 const SignUp = () => {
@@ -56,27 +57,38 @@ const SignUp = () => {
     }
 
     const onSubmit = (data) => {
-        console.log(data)
-        // axios.post("/api/signup", {...data}).then(res => {
-        //     setCommonErrorMessage("")
-        //     setCommonSuccessMessage(res.data.success.message)
-        //     router.push("/account")
-        // }).catch(err => {
-        //     console.log(err.response.data.errors)
-        //     if (err.response.data.errors[0].name !== "common") {
-        //         err.response.data.errors.map(error => setError(error.name, {message:error.message, type:"server"}))
-        //     } else {
-        //         setCommonErrorMessage(err.response.data.errors[0].message)
-        //     }
-        // })
+        axios.post("/api/signup", {...data}).then(res => {
+            setCommonErrorMessage("")
+            setCommonSuccessMessage(res.data.success.message)
+            router.push({pathname:"/signin", query:{
+                message:"Вам на почту было выслано письмо с паролем от аккаунта."
+                }})
+        }).catch(err => {
+            console.log(err.response.data.errors)
+            if (err.response.data.errors[0].name !== "common") {
+                err.response.data.errors.map(error => setError(error.name, {message:error.message, type:"server"}))
+            } else {
+                setCommonErrorMessage(err.response.data.errors[0].message)
+            }
+        })
     }
     return (
         <MainWrapper>
             <Container fluid>
                 <form onSubmit={handleSubmit(onSubmit)} className={"p-3 p-lg-5"}>
                     <h1 className={"pb-3"}>Регистрация</h1>
-                    {commonSuccessMessage && commonSuccessMessage}
-                    {commonErrorMessage && commonErrorMessage}
+                    {commonSuccessMessage &&
+                    <Alert variant={"success"}>
+                        {commonSuccessMessage}
+                    </Alert>
+                    }
+
+
+                    {commonErrorMessage &&
+                    <Alert variant={"danger"}>
+                        {commonErrorMessage}
+                    </Alert>
+                    }
                     <h3>ФИО</h3>
                     <Row className={"pb-4"}>
                         <Col sm={12} md={8} className={"pb-2"}>

@@ -11,6 +11,8 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
+import Alert from "react-bootstrap/Alert";
+import Container from "react-bootstrap/Container";
 
 
 const PasswordResetHash = () => {
@@ -52,8 +54,18 @@ const PasswordResetHash = () => {
                 <Card className={"p-3 pt-5 pb-5 shadow"}>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <h1  style={{textAlign: "center", paddingBottom:"2rem"}}>Новый пароль</h1>
-                    {commonSuccessMessage && commonSuccessMessage}
-                    {commonErrorMessage && commonErrorMessage}
+                    {commonSuccessMessage &&
+                    <Alert variant={"success"}>
+                        {commonSuccessMessage}
+                    </Alert>
+                    }
+
+
+                    {commonErrorMessage &&
+                    <Alert variant={"danger"}>
+                        {commonErrorMessage}
+                    </Alert>
+                    }
                     {newErrors.newPassword[errors.newPassword?.type] && newErrors.newPassword[errors.newPassword?.type]}
                     <InputGroup className="mb-3">
                         <FormControl

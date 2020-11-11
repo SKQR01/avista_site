@@ -5,17 +5,18 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Button from "react-bootstrap/Button"
 import FormControl from "react-bootstrap/FormControl"
-import InputGroup from "react-bootstrap/InputGroup"
+import QuestionHelp from "@components/QuestionHelp"
 
 
 import MainWrapper from "@components/MainWrapper"
 import axios from "@utils/axios"
 import {useForm} from "react-hook-form"
-import { ErrorMessage } from '@hookform/error-message'
+import {ErrorMessage} from '@hookform/error-message'
 
 import {useRouter} from "next/router"
-import {useState} from "react";
+import React, {useState} from "react";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
+import Alert from "react-bootstrap/Alert";
 
 
 const OrdersForm = ({cookie}) => {
@@ -24,7 +25,6 @@ const OrdersForm = ({cookie}) => {
     const [commonSuccessMessage, setCommonSuccessMessage] = useState()
     const [commonErrorMessage, setCommonErrorMessage] = useState()
     const {register, handleSubmit, setError, errors} = useForm()
-
 
     const onSubmit = (data, e) => {
         let requestState = {
@@ -36,6 +36,11 @@ const OrdersForm = ({cookie}) => {
             .then((res) => {
                 e.target.reset()
                 setCommonSuccessMessage(res.data.success.message)
+                if(!cookie){
+                    router.push({pathname:"/signin", query:{
+                            message:"Вам на почту было выслано письмо с паролем от аккаунта."
+                        }})
+                }
             })
             .catch(err => {
                 const error = err.response.data.errors[0].message
@@ -48,10 +53,23 @@ const OrdersForm = ({cookie}) => {
         <form onSubmit={handleSubmit(onSubmit)}>
             <Container className={"pt-5"}>
                 <h1 className={"pb-3"}>Сделать заказ</h1>
-                {commonErrorMessage && commonErrorMessage}
-                {commonSuccessMessage && commonSuccessMessage}
+                {commonSuccessMessage &&
+                <Alert variant={"success"}>
+                    {commonSuccessMessage}
+                </Alert>
+                }
+
+                {commonErrorMessage &&
+                <Alert variant={"danger"}>
+                    {commonErrorMessage}
+                </Alert>
+                }
                 <Card className={"p-3 pb-5"}>
                     <FormGroup className={'row g-3'}>
+                        <Container className={"d-flex justify-content-end"}>
+                            <QuestionHelp
+                                message={"После оформления заказа вам на почту будет выслан пароль от личного кабинета, где вы сможете мониторить свои заказы."}/>
+                        </Container>
                         {!cookie &&
                         <Container fluid className={"pb-4"}>
                             <h3 className={"pb-3"}>Кто вы?</h3>
@@ -107,6 +125,7 @@ const OrdersForm = ({cookie}) => {
                             <div className={"pb-3"}>
                                 <FormControl as="input" aria-label="Тема заказа"
                                              name={"title"}
+                                             autoComplete={"off"}
                                              placeholder={"Тема заказа"}
                                              ref={register({required: "Введите тему заказа"})}/>
                             </div>

@@ -14,6 +14,8 @@ import {ErrorMessage} from "@hookform/error-message"
 import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
 import {redirectIfNotAdmin} from "@utils/privateRedirects";
+import Link from "next/link";
+import Alert from "react-bootstrap/Alert";
 
 const UserOrder = () => {
     const router = useRouter()
@@ -54,9 +56,21 @@ const UserOrder = () => {
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Container fluid className={"pb-4"}>
-                    <Container fluid className={"pb-4"}>
-                        {commonSuccessMessage && commonSuccessMessage}
-                        {commonErrorMessage && commonErrorMessage}
+                    <Container fluid className={"py-4"}>
+
+                        {commonSuccessMessage &&
+                        <Alert variant={"success"}>
+                            {commonSuccessMessage}
+                        </Alert>
+                        }
+
+
+                        {commonErrorMessage &&
+                        <Alert variant={"danger"}>
+                            {commonErrorMessage}
+                        </Alert>
+                        }
+
                         <h2 className={"pb-3"}>О заказе</h2>
                         <h4>Статус: {order?.status.title}</h4>
                         <h3 className={"pt-2"}>Тема заказа</h3>
@@ -111,7 +125,7 @@ const UserOrder = () => {
                     </Container>
                     {order &&
                     <Container fluid>
-                        <Card >
+                        <Card>
                             <Card.Header><h2>О заказчике</h2></Card.Header>
                             <ListGroup variant="flush">
                                 <ListGroup.Item>
@@ -123,13 +137,21 @@ const UserOrder = () => {
                                 <ListGroup.Item>
                                     Телефон: {order.user.phoneNumber}
                                 </ListGroup.Item>
+                                <ListGroup.Item>
+                                    <Button onClick={() => router.push({
+                                        pathname: `/admin/users/${order.user._id}`,
+                                        query: {id: order.user._id}
+                                    })}>
+                                        Перейти к пользователю
+                                    </Button>
+                                </ListGroup.Item>
                             </ListGroup>
                         </Card>
-                        <Row className={"justify-content-end"}>
-                            <Col xs={12} md={5} lg={4} style={{textAlign:"end"}}>
+                        <Row className={"justify-content-end py-3"}>
+                            <Col xs={12} md={5} lg={4} style={{textAlign: "end"}}>
 
                                 <Button onClick={router.back}>Назад</Button>
-                                <Button className={"ml-sm-3"}  type={"submit"}>Изменить данные</Button>
+                                <Button className={"ml-sm-3"} type={"submit"}>Изменить данные</Button>
                             </Col>
                         </Row>
                     </Container>

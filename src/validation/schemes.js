@@ -61,12 +61,12 @@ export const userSchemaValidation = {
 export const orderSchemaValidation = {
     orderCreate: {
         title: {
-            callback: [isPresentInObject, isCyrillicOrLateinschrift],
-            errorMessage: ["Укажите тему заказа.", "Недопустимая тема (должна быть написана кириллицей или латиницей)."]
+            callback: [isPresentInObject],
+            errorMessage: ["Укажите тему заказа."]
         },
         description: {
-            callback: [isPresentInObject, isCyrillicOrLateinschrift],
-            errorMessage: ["Укажите описание заказа.", "Недопустимое описание заказа (должно быть написано кириллицей или латиницей)."]
+            callback: [isPresentInObject],
+            errorMessage: ["Укажите описание заказа."]
         }
     },
     orderPut: {
