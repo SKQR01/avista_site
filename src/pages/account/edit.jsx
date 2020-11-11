@@ -13,6 +13,7 @@ import {redirectIfNotAuth} from "@utils/privateRedirects"
 import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card"
 import Row from "react-bootstrap/Row"
+import Alert from "react-bootstrap/Alert";
 
 
 const removeEqualsObjectFields = (newObj, oldObj) => {
@@ -72,8 +73,18 @@ const EditAccount = () => {
                         <h1 style={{textAlign: "center", paddingBottom: "2rem"}}>Изменить данные</h1>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <Container fluid className={"pb-4"}>
-                                {commonSuccessMessage && commonSuccessMessage}
-                                {commonErrorMessage && commonErrorMessage}
+                                {commonSuccessMessage &&
+                                <Alert variant={"success"}>
+                                    {commonSuccessMessage}
+                                </Alert>
+                                }
+
+
+                                {commonErrorMessage &&
+                                <Alert variant={"danger"}>
+                                    {commonErrorMessage}
+                                </Alert>
+                                }
                                 <ErrorMessage errors={errors} name={"secondName"}/>
                                 <div className={"pb-3"}>
                                     <b>Фамилия</b>

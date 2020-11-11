@@ -19,8 +19,8 @@ export default apiRoutesHandler(
     withDb({
         POST: withSession(async (req, res, session) => {
             try {
-                // const potentialErrors = validateData(req.body, orderSchemaValidation.orderCreate)
-                // if(potentialErrors.length !== 0) return res.status(422).json({errors:potentialErrors})
+                const potentialErrors = validateData(req.body, orderSchemaValidation.orderCreate)
+                if(potentialErrors.length !== 0) return res.status(422).json({errors:potentialErrors})
                 const session = req.session.get("authToken")
                 if (session) {
                     const user = await User.findById(session.userId)
@@ -60,6 +60,7 @@ export default apiRoutesHandler(
                         } else {
                             try {
                                 user.orders.addToSet(newOrder.id)
+                                await newOrder.save()
                                 await sendNewAccountPasswordToUser(requestUserData.email, newPassword)
                                 return res.json({success: {name: 'common', message: 'Ваш заказ успешно оформлен.'}})
                             } catch (e) {
@@ -72,20 +73,7 @@ export default apiRoutesHandler(
                             }
                         }
                     })
-                    await newOrder.save()
-                    // if(newUser){
-                    //     await sendNewAccountPasswordToUser(requestUserData.email, newPassword)
-                    //     console.log("newUser.id", newUser.id)
-                    //
-                    //     const defaultStatus = await OrderStatus.findOne(config.orderStatuses.notAccepted).lean()
-                    //     console.log("defaultStatus.id",defaultStatus.id)
-                    //     const newOrder = new Order.create({...req.body, user: newUser.id, status: defaultStatus.id})
-                    //
-                    //     console.log("newOrder",newOrder)
-                    //
-                    //     newUser.orders.addToSet(newOrder.id)
-                    //     return res.status(200).json({success: {name: 'common', message: 'Ваш заказ успешно оформлен.'}})
-                    // }
+
 
 
                 }

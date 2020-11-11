@@ -8,6 +8,10 @@ body {
   font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
   Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
+.content-image{
+  width: 100%;
+  height: auto;
+}
 
 .link{
   color: #444450;
@@ -17,16 +21,17 @@ body {
   text-decoration: underline;
 }
 
+* a{
+  color: initial;
+  text-decoration: none;
+}
+
 .clearfix{
   height: 30vh;
 }
+
 html {
   overflow-y: scroll;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }
 
 *, *:before, *:after {

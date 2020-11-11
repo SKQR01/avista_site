@@ -5,6 +5,14 @@ import Col from "react-bootstrap/Col";
 import {NextSeo} from "next-seo";
 import {useRouter} from "next/router";
 
+import Repair from "@images/service/update.svg"
+import Integr from "@images/service/integration.svg"
+import Protect from "@images/service/protection.svg"
+import Support from "@images/service/technical-support.svg"
+import cProduct from "@images/franchise/1C_Red.svg"
+import Link from "next/link";
+
+
 const Service = () => {
     const router = useRouter()
   return (
@@ -29,7 +37,9 @@ const Service = () => {
 
               <Row className={"py-5"}>
                   <Col sm={4} className={"p-2 text-center"}>
-                      <img src={"https://via.placeholder.com/200"} className={"pb-4"}/>
+                      <div className={"p-3"}>
+                      <img src={Support} className={"content-image"}/>
+                      </div>
                       <div className={"d-flex flex-column"}>
                           <h4>Сопровождение</h4>
                           <p>Есть над чем задуматься: интерактивные прототипы призывают нас к новым свершениям,
@@ -38,8 +48,9 @@ const Service = () => {
 
                   </Col>
                   <Col sm={4} className={"p-2 text-center"}>
-
-                      <img src={"https://via.placeholder.com/200"} className={"pb-4"}/>
+                      <div className={"p-3"}>
+                      <img src={Integr} className={"content-image"}/>
+                      </div>
                       <div className={"d-flex flex-column"}>
                           <h4>Внедрение</h4>
                           <p>В целом, конечно, глубокий уровень погружения не даёт нам иного выбора, кроме
@@ -48,7 +59,10 @@ const Service = () => {
                   </Col>
 
                   <Col sm={4} className={"p-2 text-center"}>
-                      <img src={"https://via.placeholder.com/200"} className={"pb-4"}/>
+                      <div className={"p-3"}>
+                          <img src={Repair} className={"content-image"}/>
+                      </div>
+
                       <div className={"d-flex flex-column"}>
                           <h4>Восстановление</h4>
                           <p>Равным образом, сплочённость команды профессионалов говорит о возможностях
@@ -56,30 +70,26 @@ const Service = () => {
                       </div>
                   </Col>
               </Row>
-            <Row>
-                <Col sm={6}>
+          <hr/>
 
-                </Col>
-                <Col sm={6}>
-
-                </Col>
-            </Row>
-          <Row className={"pb-4"}>
+          <Row className={"py-5"}>
               <Col sm={6} className={"d-flex align-items-center"}>
                   <div>
                       <h3>Продажа и настройка программных продуктов 1С</h3>
+                      <p>Список которых вы можете посмотреть <Link href={"/products"}><a className={"link"}>здесь</a></Link>.</p>
                   </div>
               </Col>
               <Col sm={6}>
                   <div>
-                      <img src={"https://via.placeholder.com/400"}/>
+                      <img src={cProduct} className={"content-image"}/>
                   </div>
               </Col>
           </Row>
-          <Row className={"pb-4"}>
+          <hr/>
+          <Row className={"py-5"}>
               <Col sm={6}>
                   <div>
-                      <img src={"https://via.placeholder.com/400"}/>
+                      <img src={Protect} className={"content-image"}/>
                   </div>
               </Col>
               <Col sm={6} className={"d-flex align-items-center"}>
@@ -88,6 +98,18 @@ const Service = () => {
                   </div>
               </Col>
           </Row>
+          <hr/>
+          <Container fluid className={"pb-4"}>
+              <Row className={"d-flex align-items-center py-4"}>
+                  <Col sm={4} className={"p-2 text-end align-items-center"}>
+                      <h2>Заказать наши услуги:</h2>
+                  </Col>
+                  <Col sm={4}>
+                      <Link href={"/ordersForm"}><a className={"link"}><h4>перейти в форму заказа</h4>
+                      </a></Link>
+                  </Col>
+              </Row>
+          </Container>
       </Container>
     </MainWrapper>
           </>

@@ -3,19 +3,6 @@ $theme-first-color: #117382;
 $theme-second-color: #bd0102;
 
 
-.main-navbar {
-  @media screen and (min-width: 768px) {
-    &__item:not(:last-child) {
-      border-right: $theme-first-color solid 1px;
-    }
-  }
-  @media screen and (max-width: 767px) {
-    &__item{
-      text-align: center;
-    }
-  }
-}
-
 
 .navbar-logo {
   font-weight: bold;
@@ -32,6 +19,7 @@ $theme-second-color: #bd0102;
 }
 
 .main-navbar__item{
+  text-align: center;
   position: relative;
   align-items: center;
   justify-content: center;

@@ -14,7 +14,7 @@ import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
 
 export default apiRoutesHandler(
     withDb({
-            GET: callbackHandlerApi([checkAuthentication], async (req, res) => {
+            GET: callbackHandlerApi([checkAuthentication], async (req, res, session) => {
                 try {
                     const validationSchema = {
                         pageNumber: {
@@ -30,8 +30,8 @@ export default apiRoutesHandler(
                     const potentialErrors = validateData(req.query, validationSchema)
                     if (potentialErrors.length !== 0) return res.status(422).json({errors: potentialErrors})
 
-                    const userSession = req.session.get("authToken")
-                    if (!userSession) return res.status(403).json({
+
+                    if (!session) return res.status(403).json({
                         errors: [{
                             name: 'common',
                             message: "Пользователя не найдено."
@@ -44,13 +44,18 @@ export default apiRoutesHandler(
 
                     const toSkip = (pageNumber - 1) * pagination
 
-                    const user = await User.findById(userSession.userId).populate({
+                    const usersOrders = await User.findById(session.userId).select("orders").lean()
+                    const totalSize = usersOrders.orders.length
+                    console.log(totalSize)
+
+                    const user = await User.findById(session.userId).populate({
                         path: "orders",
                         select: '_id title createdAt status price',
                         model:Order,
                         options: {
                             sort: {createdAt: -1},
                             skip: toSkip,
+                            limit:pagination
                         },
                         populate: {
                             path: "status",
@@ -58,10 +63,8 @@ export default apiRoutesHandler(
                         }
                     })
 
-                    const orders = user.orders
-                    const totalSize = user.orders.length
 
-                    res.json({success: {payload: {orders:orders, totalSize:totalSize}}})
+                    res.json({success: {payload: {orders:user.orders, totalSize:totalSize}}})
                 } catch (e) {
                     res.status(500).json({errors: [{name: 'common', message: e.message}]})
                 }
