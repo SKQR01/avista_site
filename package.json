@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node server.js",
+    "dev": "node mongorun.js && next dev",
     "build": "node mongorun.js && next build",
-    "start": "node mongorun.js &&ъ cross-env NODE_ENV=production node server.js",
-    "nstart": "next start"
+    "start": "cross-env NODE_ENV=production next start"
   },
   "dependencies": {
     "@hookform/error-message": "^0.0.4",
@@ -16,6 +15,7 @@
     "bootstrap": "^4.5.2",
     "cookie": "^0.4.1",
     "dotenv": "^8.2.0",
+    "lodash": "^4.17.20",
     "mongoose": "^5.10.8",
     "mongoose-unique-validator": "^2.0.3",
     "next": "9.5.3",
@@ -40,6 +40,7 @@
     "react-hook-form": "^6.9.5",
     "react-icons": "^3.11.0",
     "react-query": "^2.25.2",
+    "react-spinners": "^0.9.0",
     "sass": "^1.26.10",
     "socket.io": "^2.3.0",
     "swr": "0.3.6",

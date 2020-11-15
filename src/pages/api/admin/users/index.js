@@ -7,7 +7,7 @@ import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
 
 
 export default apiRoutesHandler(
-    withDb({
+    {
             GET: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res, session) => {
                 try {
 
@@ -50,6 +50,5 @@ export default apiRoutesHandler(
                 }
             })
         }
-    )
 )
 

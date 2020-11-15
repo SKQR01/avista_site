@@ -18,9 +18,10 @@ import Alert from "react-bootstrap/Alert";
 
 const SignUp = () => {
 
-    const {register, handleSubmit, watch, errors, setError} = useForm()
+    const {register, handleSubmit, watch, errors} = useForm()
     const [commonSuccessMessage, setCommonSuccessMessage] = useState()
     const [commonErrorMessage, setCommonErrorMessage] = useState()
+    const [isFetching, setIsFetching] = useState()
 
     const password = watch("password")
     const router = useRouter()
@@ -83,7 +84,6 @@ const SignUp = () => {
                     </Alert>
                     }
 
-
                     {commonErrorMessage &&
                     <Alert variant={"danger"}>
                         {commonErrorMessage}
@@ -94,6 +94,7 @@ const SignUp = () => {
                         <Col sm={12} md={8} className={"pb-2"}>
                             {customErrors.secondName[errors.secondName?.type] && customErrors.secondName[errors.secondName?.type]}
                             <FormControl as="input" placeholder="Фамилия" name={'secondName'}
+                                         maxLength={"250"}
                                          ref={register(
                                              {
                                                  required: true,
@@ -105,6 +106,7 @@ const SignUp = () => {
                         <Col sm={12} md={8} className={"pb-2"}>
                             {customErrors.firstName[errors.firstName?.type] && customErrors.firstName[errors.firstName?.type]}
                             <FormControl as="input" placeholder="Имя" name={'firstName'}
+                                         maxLength={"250"}
                                          ref={register(
                                              {
                                                  required: true,
@@ -116,6 +118,7 @@ const SignUp = () => {
                         <Col sm={12} md={8} className={"pb-2"}>
                             {customErrors.patronymicName[errors.patronymicName?.type] && customErrors.patronymicName[errors.patronymicName?.type]}
                             <FormControl as="input" placeholder="Отчество" name={'patronymicName'}
+                                         maxLength={"250"}
                                          ref={register(
                                              {
                                                  required: true,
@@ -127,6 +130,7 @@ const SignUp = () => {
                         <Col sm={12} md={6} className={"pb-2"}>
                             {errors.phoneNumber && errors.phoneNumber.message}
                             <FormControl as="input" placeholder="Ваш телефон" name={'phoneNumber'}
+                                         maxLength={"250"}
                                          ref={register(
                                              {
                                                  required: true,
@@ -146,6 +150,7 @@ const SignUp = () => {
                             <div>
                                 {errors.email && errors.email.message}
                                 <FormControl as="input" className={"mb-2"} placeholder={"E-mail"} name={"email"}
+                                             maxLength={"250"}
                                              ref={register(
                                                  {
                                                      required: customErrors.email.required,
@@ -163,7 +168,9 @@ const SignUp = () => {
                             <div>
                                 {customErrors.password[errors.password?.type] && customErrors.password[errors.password?.type]}
                                 <FormControl as="input" className={"mb-2"} placeholder={"Пароль"}
+                                             maxLength={"250"}
                                              name={"password"}
+                                             onInput={(e) => console.log(e.target.value)}
                                              ref={register(
                                                  {
                                                      required: true,
@@ -176,6 +183,7 @@ const SignUp = () => {
                                 />
                                 {customErrors.passwordConfirm[errors.passwordConfirm?.type] && customErrors.passwordConfirm[errors.passwordConfirm?.type]}
                                 <FormControl as="input" placeholder={"Подтверждение пароля"}
+                                             maxLength={"250"}
                                              name={"passwordConfirm"}
                                              ref={register(
                                                  {

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const OrderStatusSchema = new mongoose.Schema({
+const UserBusinessStatusSchema = new mongoose.Schema({
     title: {
         type: String,
         required: [true, "Пожалуйста дайте название новому статусу."],
@@ -8,5 +8,5 @@ const OrderStatusSchema = new mongoose.Schema({
     },
 })
 
-module.exports = mongoose.models.OrderStatus || mongoose.model('OrderStatus', OrderStatusSchema)
+module.exports = mongoose.models.UserBusinessStatus || mongoose.model('UserBusinessStatus', UserBusinessStatusSchema)
 

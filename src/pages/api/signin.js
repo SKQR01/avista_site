@@ -4,16 +4,16 @@ import {compare} from "bcrypt"
 
 import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import User from './../../models/User'
+import User from '@models/User'
 
 import withSession from "@utils/withSession"
 
 
 export default apiRoutesHandler(
     withDb({
-        POST: withSession(async (req, res) => {
+        POST: withSession(async (req, res, session) => {
             try {
-                if (req.session.get("authToken")) return res.status(400).json({
+                if (session) return res.status(400).json({
                     errors: [{name:"common", message: "Вы уже авторизованы.", payload: {user: {isLoggedIn: true}}}]
                 })
                 const {email, password} = req.body

@@ -16,6 +16,7 @@ import ListGroup from "react-bootstrap/ListGroup"
 import {redirectIfNotAdmin} from "@utils/privateRedirects";
 import Link from "next/link";
 import Alert from "react-bootstrap/Alert";
+import Spinner from "react-bootstrap/Spinner";
 
 const UserOrder = () => {
     const router = useRouter()
@@ -27,20 +28,30 @@ const UserOrder = () => {
     const [commonErrorMessage, setCommonErrorMessage] = useState()
     const {register, handleSubmit, errors, reset} = useForm()
 
-    useEffect(() => {
-        if (router.query.id) {
-            axios.get(`/api/admin/orders/${router.query.id}`, {withCredentials: true}).then((res) => {
+    const [isDataFetching, setIsDataFetching] = useState(true)
 
-                reset(res.data.success.payload.order)
-                setCurrentOrderStatus(res.data.success.payload.order.status._id)
-                setOrder(res.data.success.payload.order)
-            }).catch(err => console.log(err))
-            axios.get(`/api/admin/orders/statuses`, {withCredentials: true}).then((res) => {
-                setOrderStatuses(res.data.success.payload.ordresStatuses)
-            }).catch(err => console.log(err))
+    async function fetchData() {
+        if (router.query.id) {
+            setIsDataFetching(true)
+            try {
+                const resOrders = await axios.get(`/api/admin/orders/${router.query.id}`, {withCredentials: true})
+                reset(resOrders.data.success.payload.order)
+                setCurrentOrderStatus(resOrders.data.success.payload.order.status._id)
+                setOrder(resOrders.data.success.payload.order)
+                const resStatuses = await axios.get(`/api/admin/orders/statuses`, {withCredentials: true})
+                setOrderStatuses(resStatuses.data.success.payload.ordresStatuses)
+            } catch (err) {
+                console.error(err)
+            }
+            setIsDataFetching(false)
         }
 
+    }
+
+    useEffect(() => {
+        fetchData()
     }, [router])
+
 
 
     const onSubmit = (data, e) => {
@@ -55,111 +66,122 @@ const UserOrder = () => {
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Container fluid className={"pb-4"}>
-                    <Container fluid className={"py-4"}>
+                {
+                    isDataFetching ?
+                        <div className={"d-flex justify-content-center p-5"}>
+                            <Spinner animation="border" role="status">
+                                <span className="sr-only">Loading...</span>
+                            </Spinner>
+                        </div>
+                        :
+                        <Container fluid className={"pb-4"}>
+                            <Container fluid className={"py-4"}>
 
-                        {commonSuccessMessage &&
-                        <Alert variant={"success"}>
-                            {commonSuccessMessage}
-                        </Alert>
-                        }
+                                {commonSuccessMessage &&
+                                <Alert variant={"success"}>
+                                    {commonSuccessMessage}
+                                </Alert>
+                                }
 
 
-                        {commonErrorMessage &&
-                        <Alert variant={"danger"}>
-                            {commonErrorMessage}
-                        </Alert>
-                        }
+                                {commonErrorMessage &&
+                                <Alert variant={"danger"}>
+                                    {commonErrorMessage}
+                                </Alert>
+                                }
 
-                        <h2 className={"pb-3"}>О заказе</h2>
-                        <h4>Статус: {order?.status.title}</h4>
-                        <h3 className={"pt-2"}>Тема заказа</h3>
-                        <ErrorMessage errors={errors} name={"title"}/>
-                        <FormControl as="input" aria-label="Тема заказа"
-                                     name={"title"}
-                                     placeholder={"Тема заказа"}
-                                     ref={register({required: "Тема заказа не может быть пустой."})}
-                        />
-
-                        <Row>
-                            <Col sm={6}>
-                                <h3 className={"pt-2"}>Статус заказа</h3>
-                                <ErrorMessage errors={errors} name={"status"}/>
-                                <FormControl as="select" aria-label="Описание заказа"
-                                             name={"status"}
-                                             placeholder={"Статус заказа"}
-                                             ref={register({required: "Статус заказа не может быть пустым."})}
-                                             onChange={(e) => setCurrentOrderStatus(e.target.value)}
-                                             value={currentOrderStatus}
-                                >
-                                    {orderStatuses.map(orderStatus => {
-                                        return <option key={orderStatus._id}
-                                                       value={orderStatus._id}
-                                        >
-                                            {orderStatus.title}
-                                        </option>
-                                    })}
-                                </FormControl>
-                            </Col>
-                            <Col sm={6}>
-                                <h3 className={"pt-2"}>Цена</h3>
-                                <ErrorMessage errors={errors} name={"price"}/>
-                                <FormControl as="input" aria-label="Цена"
-                                             name={"price"}
-                                             placeholder={"Цена"}
-                                             ref={register}
+                                <h2 className={"pb-3"}>О заказе</h2>
+                                <h4>Статус: {order?.status.title}</h4>
+                                <h3 className={"pt-2"}>Тема заказа</h3>
+                                <ErrorMessage errors={errors} name={"title"}/>
+                                <FormControl as="input" aria-label="Тема заказа"
+                                             name={"title"}
+                                             maxLength={"250"}
+                                             placeholder={"Тема заказа"}
+                                             ref={register({required: "Тема заказа не может быть пустой."})}
                                 />
-                            </Col>
-                        </Row>
+
+                                <Row>
+                                    <Col sm={6}>
+                                        <h3 className={"pt-2"}>Статус заказа</h3>
+                                        <ErrorMessage errors={errors} name={"status"}/>
+                                        <FormControl as="select" aria-label="Описание заказа"
+                                                     name={"status"}
+                                                     placeholder={"Статус заказа"}
+                                                     ref={register({required: "Статус заказа не может быть пустым."})}
+                                                     onChange={(e) => setCurrentOrderStatus(e.target.value)}
+                                                     value={currentOrderStatus}
+                                        >
+                                            {orderStatuses.map(orderStatus => {
+                                                return <option key={orderStatus._id}
+                                                               value={orderStatus._id}
+                                                >
+                                                    {orderStatus.title}
+                                                </option>
+                                            })}
+                                        </FormControl>
+                                    </Col>
+                                    <Col sm={6}>
+                                        <h3 className={"pt-2"}>Цена</h3>
+                                        <ErrorMessage errors={errors} name={"price"}/>
+                                        <FormControl as="input" aria-label="Цена"
+                                                     name={"price"}
+                                                     maxLength={"250"}
+                                                     placeholder={"Цена"}
+                                                     ref={register}
+                                        />
+                                    </Col>
+                                </Row>
 
 
-                        <h3 className={"pt-2"}>Описание заказа</h3>
-                        <ErrorMessage errors={errors} name={"description"}/>
-                        <FormControl as="textarea" aria-label="Описание заказа"
-                                     style={{minHeight: '200px'}}
-                                     name={"description"}
-                                     placeholder={"Описание заказа"}
-                                     ref={register({required: "Описание заказа не может быть пустым."})}
-                        />
+                                <h3 className={"pt-2"}>Описание заказа</h3>
+                                <ErrorMessage errors={errors} name={"description"}/>
+                                <FormControl as="textarea" aria-label="Описание заказа"
+                                             style={{minHeight: '200px'}}
+                                             name={"description"}
+                                             maxLength={"9000"}
+                                             placeholder={"Описание заказа"}
+                                             ref={register({required: "Описание заказа не может быть пустым."})}
+                                />
 
-                    </Container>
-                    {order &&
-                    <Container fluid>
-                        <Card>
-                            <Card.Header><h2>О заказчике</h2></Card.Header>
-                            <ListGroup variant="flush">
-                                <ListGroup.Item>
-                                    ФИО: {order.user.secondName} {order.user.firstName} {order.user.patronymicName}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    Email: {order.user.email}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    Телефон: {order.user.phoneNumber}
-                                </ListGroup.Item>
-                                <ListGroup.Item>
-                                    <Button onClick={() => router.push({
-                                        pathname: `/admin/users/${order.user._id}`,
-                                        query: {id: order.user._id}
-                                    })}>
-                                        Перейти к пользователю
-                                    </Button>
-                                </ListGroup.Item>
-                            </ListGroup>
-                        </Card>
-                        <Row className={"justify-content-end py-3"}>
-                            <Col xs={12} md={5} lg={4} style={{textAlign: "end"}}>
+                            </Container>
+                            {order &&
+                            <Container fluid>
+                                <Card>
+                                    <Card.Header><h2>О заказчике</h2></Card.Header>
+                                    <ListGroup variant="flush">
+                                        <ListGroup.Item>
+                                            ФИО: {order.user.secondName} {order.user.firstName} {order.user.patronymicName}
+                                        </ListGroup.Item>
+                                        <ListGroup.Item>
+                                            Email: {order.user.email}
+                                        </ListGroup.Item>
+                                        <ListGroup.Item>
+                                            Телефон: {order.user.phoneNumber}
+                                        </ListGroup.Item>
+                                        <ListGroup.Item>
+                                            <Button onClick={() => router.push({
+                                                pathname: `/admin/users/${order.user._id}`,
+                                                query: {id: order.user._id}
+                                            })}>
+                                                Перейти к пользователю
+                                            </Button>
+                                        </ListGroup.Item>
+                                    </ListGroup>
+                                </Card>
+                                <Row className={"justify-content-end py-3"}>
+                                    <Col xs={12} md={5} lg={4} style={{textAlign: "end"}}>
 
-                                <Button onClick={router.back}>Назад</Button>
-                                <Button className={"ml-sm-3"} type={"submit"}>Изменить данные</Button>
-                            </Col>
-                        </Row>
-                    </Container>
-                    }
+                                        <Button onClick={router.back}>Назад</Button>
+                                        <Button className={"ml-sm-3"} type={"submit"}>Изменить данные</Button>
+                                    </Col>
+                                </Row>
+                            </Container>
+                            }
 
 
-                </Container>
-
+                        </Container>
+                }
             </form>
         </>
     )

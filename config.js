@@ -10,5 +10,9 @@ module.exports =  {
     permissions: {
         user: {title: "Пользователь"},
         admin: {title: "Администратор"},
+    },
+    userBusinessStatuses: {
+        company: {title: "Предприятие"},
+        naturalPerson: {title: "Физическое лицо"},
     }
 }

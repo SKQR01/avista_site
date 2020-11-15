@@ -1,7 +1,7 @@
 
 
 export default function apiRoutesHandler(routeHandler) {
-    return (req, res) => {
+    return async (req, res) => {
         const { method } = req
         if (!method || !Object.keys(routeHandler).includes(method)) {
             res.setHeader('Allow', Object.keys(routeHandler))

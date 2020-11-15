@@ -7,7 +7,7 @@ import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
 
 
 export default apiRoutesHandler(
-    withDb({
+{
             GET: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res) => {
                 try {
 
@@ -34,13 +34,14 @@ export default apiRoutesHandler(
                     const filterParameter = req.query.filter ? JSON.parse(req.query.filter) :  {}
 
                     if(!req.query.search){
+                        // const orders = await Order.find(filterParameter).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
+                        const totalSize = await Order.find(filterParameter).countDocuments()
                         const orders = await Order.find(filterParameter).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
-                        const totalSize = await Order.countDocuments()
 
                         return res.json({success: {name: "common", payload: {orders:orders, totalSize:totalSize}}})
                     }
 
-                    const orders = await Order.find({$text: {$search: req.query.search}, filterParameter}).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
+                    const orders = await Order.find({$text: {$search: req.query.search}}).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
                     const totalSize = orders.length
 
 
@@ -50,6 +51,5 @@ export default apiRoutesHandler(
                 }
             })
         }
-    )
 )
 

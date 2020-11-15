@@ -6,7 +6,7 @@ import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerA
 
 
 export default apiRoutesHandler(
-    withDb({
+{
             GET: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res) => {
                 try {
 
@@ -18,6 +18,5 @@ export default apiRoutesHandler(
                 }
             })
         }
-    )
 )
 

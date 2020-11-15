@@ -1,32 +1,17 @@
-import User from "./../models/User"
+import User from "@models/User"
 
-
-// async function clearExpiresCookies(user) {
-//     if (user.tokens.length !== 0) {
-//         user.tokens = user.tokens.filter(token => {
-//             const decodedToken = verify(token, secret)
-//             if (decodedToken) {
-//                 const expiresDate = new Date(decodedToken.exp)
-//                 const today = new Date()
-//                 if (expiresDate > today) {
-//                     return token
-//                 }
-//             }
-//         })
-//     }
-//
-//     return await user.save()
-// }
 
 export async function checkAuthentication(req, session) {
     if (session) {
-        const user = await User.findById(session?.userId)
-        if(!user){
+        const user = await User.findById(session.userId).lean()
+        if (!user) {
+
             req.session.destroy()
             return "Вы, не авторизованы. Авторизуйтесь, а после этого попробуйте ещё раз."
         }
         return !(!!user)
     }
+
 }
 
 export async function checkAdminPermission(req, session) {

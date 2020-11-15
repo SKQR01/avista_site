@@ -7,7 +7,7 @@ module.exports = withImages(withFonts({
         HOST_URL: process.env.NODE_ENV === "production" ? process.env.HOST_PRODUCTION_URL : process.env.HOST_DEV_URL,
         PORT: process.env.PORT,
 
-        MONGO_URI: process.env.MONGO_URI,
+        MONGODB_URI: process.env.MONGODB_URI,
         EMAIL: process.env.EMAIL,
         PASSWORD: process.env.PASSWORD,
         EMAIL_SERVER_HOST: process.env.EMAIL_SERVER_HOST,

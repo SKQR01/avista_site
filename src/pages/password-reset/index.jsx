@@ -69,6 +69,7 @@ const PasswordReset = () => {
                                     <FormControl
                                         aria-label="email"
                                         name="email"
+                                        maxLength={"250"}
                                         placeholder={"Почта"}
                                         ref={register({
                                             required: "Введите почту для сброса пароля.", pattern: {

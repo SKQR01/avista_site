@@ -17,6 +17,7 @@ import Col from "react-bootstrap/Col"
 import {tableDateFormatter} from "@utils/tableFormatter"
 import {FaSortUp, FaSortDown, FaSort, FaTrashAlt, FaSyncAlt} from 'react-icons/fa'
 import Nav from "react-bootstrap/Nav"
+import Spinner from "react-bootstrap/Spinner";
 
 
 const NoDataIndication = () => {
@@ -44,6 +45,7 @@ const AdminOrders = () => {
     const [node, setNode] = useState()
     const [searchQuery, setSearchQuery] = useState()
 
+    const [isDataFetching, setIsDataFetching] = useState(true)
 
     const onColumnClick = (e, column, columnIndex, row, rowIndex) => {
         router.push({pathname: `/admin/orders/${row._id}`, query: {id: row._id}})
@@ -194,34 +196,33 @@ const AdminOrders = () => {
     }
 
     async function fetchData(value) {
-        axios.get("/api/admin/orders", {
-            params: {
-                pageNumber: page,
-                pagination: sizePerPage,
-                search: value,
-                sortParam: {[sortField]: sortOrder},
-                filter: filter
-            },
-            withCredentials: true,
-        })
-            .then(res => {
-                const orders = res.data.success.payload.orders.map(order => {
-                    return {
-                        ...order,
-                        user: {
-                            ...order.user,
-                            fullName: `${order.user?.secondName} ${order.user?.firstName} ${order.user?.patronymicName}`
-                        }
+        setIsDataFetching(true)
+        try {
+            const res = await axios.get("/api/admin/orders", {
+                params: {
+                    pageNumber: page,
+                    pagination: sizePerPage,
+                    search: value,
+                    sortParam: {[sortField]: sortOrder},
+                    filter: filter
+                },
+                withCredentials: true,
+            })
+            const orders = res.data.success.payload.orders.map(order => {
+                return {
+                    ...order,
+                    user: {
+                        ...order.user,
+                        fullName: `${order.user?.secondName} ${order.user?.firstName} ${order.user?.patronymicName}`
                     }
-                })
-                setOrders(orders)
-                setTotalSize(res.data.success.payload.totalSize)
+                }
             })
-            .catch(error => {
-                console.log(error)
-                console.log(JSON.stringify(error.response))
-            })
-
+            setOrders(orders)
+            setTotalSize(res.data.success.payload.totalSize)
+        } catch(error) {
+                console.error(error)
+            }
+        setIsDataFetching(false)
     }
 
     async function fetchTabOptions() {
@@ -230,7 +231,7 @@ const AdminOrders = () => {
                 return {value: option._id, label: option.title}
             })
             setTabOptions(optionsToSet)
-        }).catch(err => console.log(err))
+        }).catch(err => console.error(err))
     }
 
     useEffect(() => {
@@ -287,24 +288,38 @@ const AdminOrders = () => {
                     })
                 }
             </Nav>
-            <BootstrapTable
-                remote
-                ref={n => setNode(n)}
-                keyField='_id'
-                classes={"cell-style"}
-                data={orders}
-                columns={columns}
-                cellEdit={cellEditFactory({mode: 'click', autoSelectText: true, blurToSave: true, errorMessage: error})}
-                filter={filterFactory()}
-                pagination={paginationFactory({page, sizePerPage, totalSize})}
-                onTableChange={handleTableChange}
-                noDataIndication={() => <NoDataIndication/>}
-                selectRow={
-                    {
-                        mode: 'checkbox',
-                    }
-                }
-            />
+            {
+                isDataFetching ?
+                    <div className={"d-flex justify-content-center p-5"}>
+                        <Spinner animation="border" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </Spinner>
+                    </div>
+                    :
+                    <BootstrapTable
+                        remote
+                        ref={n => setNode(n)}
+                        keyField='_id'
+                        classes={"cell-style"}
+                        data={orders}
+                        columns={columns}
+                        cellEdit={cellEditFactory({
+                            mode: 'click',
+                            autoSelectText: true,
+                            blurToSave: true,
+                            errorMessage: error
+                        })}
+                        filter={filterFactory()}
+                        pagination={paginationFactory({page, sizePerPage, totalSize})}
+                        onTableChange={handleTableChange}
+                        noDataIndication={() => <NoDataIndication/>}
+                        selectRow={
+                            {
+                                mode: 'checkbox',
+                            }
+                        }
+                    />
+            }
         </AdminPanelWrapper>
     )
 }

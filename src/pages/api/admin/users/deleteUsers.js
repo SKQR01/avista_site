@@ -10,7 +10,7 @@ import mongoose from "mongoose";
 
 
 export default apiRoutesHandler(
-    withDb({
+    {
             POST: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res, session) => {
                 try {
                     //в отдельный файлик схему валидации не стал пихать, т.к. схемка маленькая и не стоит того её в отдельный файл выносить
@@ -36,6 +36,5 @@ export default apiRoutesHandler(
                 }
             })
         }
-    )
 )
 

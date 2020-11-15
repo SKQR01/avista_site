@@ -10,6 +10,10 @@ const dbErrorCompile = (err, res) => {
         phoneNumber: {
             name: "phoneNumber",
             message: "Введённый телефон уже существует, пожалуйста, введите другой."
+        },
+        ITN:{
+            name: "ITN",
+            message: "Введённый ИНН уже присутствует в базе данных, пожалуйста, введите другой."
         }
     }
 
