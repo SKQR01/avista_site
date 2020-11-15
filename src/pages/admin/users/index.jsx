@@ -16,6 +16,7 @@ import Col from "react-bootstrap/Col"
 import {tableDateFormatter} from "@utils/tableFormatter"
 import {FaSortUp, FaSortDown, FaSort, FaTrashAlt, FaSyncAlt} from 'react-icons/fa'
 import Nav from "react-bootstrap/Nav"
+import Spinner from "react-bootstrap/Spinner";
 
 
 const NoDataIndication = () => {
@@ -39,6 +40,8 @@ const AdminUsers = () => {
     const [totalSize, setTotalSize] = useState()
     const [node, setNode] = useState()
     const [searchQuery, setSearchQuery] = useState()
+
+    const [isDataFetching, setIsDataFetching] = useState(true)
 
 
     const onRowClick = (e, row, rowIndex) => {
@@ -136,23 +139,23 @@ const AdminUsers = () => {
     }
 
     async function fetchData(value) {
-        axios.get("/api/admin/users", {
-            params: {
-                pageNumber: page,
-                pagination: sizePerPage,
-                search: value,
-                sortParam: {[sortField]: sortOrder},
-            },
-            withCredentials: true,
-        })
-            .then(res => {
-                setUsers(res.data.success.payload.users)
-                setTotalSize(res.data.success.payload.totalSize)
+        setIsDataFetching(true)
+        try {
+            const res = await  axios.get("/api/admin/users", {
+                params: {
+                    pageNumber: page,
+                    pagination: sizePerPage,
+                    search: value,
+                    sortParam: {[sortField]: sortOrder},
+                },
             })
-            .catch(error => {
-                console.log(error)
-                console.log(JSON.stringify(error.response))
-            })
+            setUsers(res.data.success.payload.users)
+            setTotalSize(res.data.success.payload.totalSize)
+        }catch (e) {
+            console.error(e)
+        }
+
+        setIsDataFetching(false)
     }
 
 
@@ -192,29 +195,39 @@ const AdminUsers = () => {
                 </Col>
             </Row>
             <div className={"d-flex justify-content-end py-3"}>
-                <Button variant="success" onClick={()=>fetchData()} className={"mr-2"}><FaSyncAlt/></Button>
-                <Button variant="danger" onClick={()=>removeHandler()}><FaTrashAlt/></Button>
+                <Button variant="success" onClick={() => fetchData()} className={"mr-2"}><FaSyncAlt/></Button>
+                <Button variant="danger" onClick={() => removeHandler()}><FaTrashAlt/></Button>
             </div>
-            <BootstrapTable
-                remote
-                ref={n => setNode(n)}
-                keyField='_id'
-                classes={"cell-style"}
-                data={users}
-                columns={columns}
-                filter={filterFactory()}
-                pagination={paginationFactory({page, sizePerPage, totalSize})}
-                onTableChange={handleTableChange}
-                noDataIndication={() => <NoDataIndication/>}
-                rowEvents={{
-                    onClick:onRowClick
-                }}
-                selectRow={
-                    {
-                        mode: 'checkbox',
-                    }
-                }
-            />
+            {
+                isDataFetching ?
+                    <div className={"d-flex justify-content-center p-5"}>
+                        <Spinner animation="border" role="status">
+                            <span className="sr-only">Loading...</span>
+                        </Spinner>
+                    </div>
+                    :
+                    <BootstrapTable
+                        remote
+                        ref={n => setNode(n)}
+                        keyField='_id'
+                        classes={"cell-style"}
+                        data={users}
+                        columns={columns}
+                        filter={filterFactory()}
+                        pagination={paginationFactory({page, sizePerPage, totalSize})}
+                        onTableChange={handleTableChange}
+                        noDataIndication={() => <NoDataIndication/>}
+                        rowEvents={{
+                            onClick: onRowClick
+                        }}
+                        selectRow={
+                            {
+                                mode: 'checkbox',
+                            }
+                        }
+                    />
+            }
+
         </AdminPanelWrapper>
     )
 }

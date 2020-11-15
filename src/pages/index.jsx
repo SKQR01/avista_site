@@ -42,6 +42,18 @@ export default function Home() {
                         </Col>
                     </Row>
                     <hr/>
+                    <Container className={"pb-4"}>
+                        <Row className={"d-flex align-items-center py-4"}>
+                            <Col sm={4} className={"p-2 text-end align-items-center"}>
+                                <h2>Заказать наши услуги:</h2>
+                            </Col>
+                            <Col sm={4}>
+                                <Link href={"/ordersForm"}><a className={"link"}><h4>перейти в форму заказа</h4>
+                                </a></Link>
+                            </Col>
+                        </Row>
+                    </Container>
+                    <hr/>
                     <Container fluid className={"pb-5"}>
                         <div className={"text-center"}>
                             <h2 className={"pb-3"}>Выбирая нас, вы получаете</h2>
@@ -49,8 +61,8 @@ export default function Home() {
 
                         <Row>
                             <Col sm={4} className={"p-2 text-center"}>
-                                <div className={"p-sm-2 p-md-5"}>
-                                    <img src={Quality} className={"content-image"}/>
+                                <div className={"p-sm-2 p-md-3 p-lg-5"}>
+                                    <img src={Quality} className={"small-content-image"}/>
                                 </div>
 
                                 <div className={"d-flex flex-column"}>
@@ -62,19 +74,19 @@ export default function Home() {
 
                             </Col>
                             <Col sm={4} className={"p-2 text-center"}>
-                                <div className={"p-sm-2 p-md-5"}>
-                                <img src={Price} className={"content-image"}/>
+                                <div className={"p-sm-2 p-md-3 p-lg-5"}>
+                                <img src={Price} className={"small-content-image"}/>
                                 </div>
                                 <div className={"d-flex flex-column"}>
-                                    <h4>Низкие цены</h4>
+                                    <h4>Разумные цены</h4>
                                     <p>В целом, конечно, глубокий уровень погружения не даёт нам иного выбора, кроме
                                         определения вывода текущих активов.</p>
                                 </div>
                             </Col>
 
                             <Col sm={4} className={"p-2 text-center"}>
-                                <div className={"p-sm-2 p-md-5"}>
-                                    <img src={Empathy} className={"content-image"}/>
+                                <div className={"p-sm-2 p-md-3 p-lg-5"}>
+                                    <img src={Empathy} className={"small-content-image"}/>
                                 </div>
 
                                 <div className={"d-flex flex-column"}>
@@ -85,29 +97,19 @@ export default function Home() {
                             </Col>
                         </Row>
                     </Container>
+                    <hr/>
                     <Container fluid className={"pb-4"}>
                         <Row className={"d-flex align-items-center"}>
-                            <Col sm={12} md={8} className={"p-5 text-center"}>
-                                <img src={Exp} className={"content-image"}/>
+                            <Col sm={12} md={6} className={"p-3 text-center"}>
+                                <img src={Exp} className={"big-content-image"}/>
                             </Col>
-                            <Col sm={12} md={4} className={"p-2 text-end align-items-center justify-content-sm-center justify-content-sm-center"}>
+                            <Col sm={12} md={6} className={"p-2 text-end align-items-center justify-content-sm-center justify-content-sm-center"}>
                                 <h2>Опыт компании</h2>
                                 <p>Наша компания предоставляет услуги с 2015 года.</p>
                             </Col>
                         </Row>
                     </Container>
                     <hr/>
-                    <Container fluid className={"pb-4"}>
-                        <Row className={"d-flex align-items-center py-4"}>
-                            <Col sm={4} className={"p-2 text-end align-items-center"}>
-                                <h2>Заказать наши услуги:</h2>
-                            </Col>
-                            <Col sm={4}>
-                                <Link href={"/ordersForm"}><a className={"link"}><h4>перейти в форму заказа</h4>
-                                </a></Link>
-                            </Col>
-                        </Row>
-                    </Container>
                 </Container>
             </MainWrapper>
         </>

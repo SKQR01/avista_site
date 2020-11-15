@@ -37,6 +37,17 @@ const UserSchema = new mongoose.Schema({
         required: [true, "Пожалуйста, укажите ваш телефонный номер."],
         unique: true,
     },
+    ITN: {
+        type: String,
+        required: [true, "Пожалуйста, укажите ваш ИНН."],
+        max:[12, "ИНН не может быть иметь больше 12 цифр."],
+        unique: true,
+    },
+    businessStatus:  {
+        type: mongoose.Schema.Types.ObjectId,
+        required: [true, "Пожалуйста, укажите ваш статус."],
+        ref: "UserBusinessStatus",
+    },
     orders: [
         {
             type: mongoose.Schema.Types.ObjectId,

@@ -9,7 +9,7 @@ import {orderSchemaValidation} from "@validation/schemes";
 
 
 export default apiRoutesHandler(
-    withDb({
+    {
         GET: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res) => {
             try {
                 const {query: {id}} = req
@@ -55,5 +55,5 @@ export default apiRoutesHandler(
                 res.status(500).json({errors: [{name: 'common', message: e.message}]})
             }
         }),
-    })
+    }
 )

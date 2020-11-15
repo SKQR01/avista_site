@@ -11,7 +11,7 @@ import Button from "react-bootstrap/Button";
 const UserOrder = () => {
     const router = useRouter()
     const [order, setOrder] = useState()
-    console.log(order)
+
     useEffect(() => {
         if(router.query.id){
             axios.get(`/api/user/orders/${router.query.id}`).then((res) => {

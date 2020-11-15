@@ -14,7 +14,6 @@ import "@styles/components/products.scss"
 const TIMEOUT = 500
 
 export default function MyApp({Component, pageProps}) {
-
     return (
         <>
             <NextNprogress

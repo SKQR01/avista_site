@@ -11,18 +11,9 @@ import OrderStatus from "@models/OrderStatus";
 
 
 export default apiRoutesHandler(
-    withDb({
+    {
         GET: callbackHandlerApi([checkAuthentication, checkAdminPermission], async (req, res, session) => {
                 try {
-                    if (!session) {
-                        return res.status(401).json({
-                            errors: {
-                                name: "Common",
-                                message: "Вы не авторизованы.",
-                            }
-                        })
-                    }
-
                     const {query: {id}} = req
 
 
@@ -60,12 +51,12 @@ export default apiRoutesHandler(
                             model:Order,
                             options:{
                                 sort: sortParameter,
-                                skip:pagination*pageNumber,
-                                limit:pagination,
+                                skip: pagination*pageNumber,
+                                limit: pagination,
                             },
                             populate: {
                                 path: "status",
-                                model:OrderStatus,
+                                model: OrderStatus,
                             }
                         }).lean()
                     return res.json({success: {name: "common", payload: {user: userRes, totalSize:totalSize}}})
@@ -100,5 +91,5 @@ export default apiRoutesHandler(
                 res.status(500).json({errors: [{name: 'common', message: e.message}]})
             }
         }),
-    })
+    }
 )

@@ -5,12 +5,12 @@ const connection = {
     isConnected: 0
 }
 
-const connectDb = async () => {
+export const connectDb = async () => {
     if (connection.isConnected) {
         return
     }
     try {
-        const dbConnection = await mongoose.connect(process.env.MONGO_URI, {
+        const dbConnection = await mongoose.connect(process.env.MONGODB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useFindAndModify: false,

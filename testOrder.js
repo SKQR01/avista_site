@@ -8,7 +8,7 @@ const Permission = require('./src/models/Permission')
 const nextConfig = require('./next.config')
 
 async function createTestUser() {
-    const dbConnection = await mongoose.connect(process.env.MONGO_URI, {
+    const dbConnection = await mongoose.connect(process.env.MONGODB_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useFindAndModify: false,

@@ -3,7 +3,7 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card"
 import ListGroup from "react-bootstrap/ListGroup"
-import Spinner from "react-bootstrap/Spinner"
+import Spinner from 'react-bootstrap/Spinner'
 import Button from "react-bootstrap/Button"
 
 import axios from "@utils/axios"
@@ -51,7 +51,7 @@ const NoDataIndication = () => {
 }
 
 
-const Account = ({user}) => {
+const Account = () => {
     const [page, setPage] = useState(1)
     const [userAccount, setUserAccount] = useState()
     const [sizePerPage, setSizePerPage] = useState(10)
@@ -59,6 +59,9 @@ const Account = ({user}) => {
     const [totalSize, setTotalSize] = useState()
     const [error, setError] = useState(null)
     const router = useRouter()
+
+    const [isUserFetching, setIsUserFetching] = useState(true)
+    const [isDataFetching, setIsDataFetching] = useState(true)
 
     const [node, setNode] = useState()
 
@@ -68,30 +71,33 @@ const Account = ({user}) => {
     }
 
     async function fetchData() {
-        axios.get("/api/user/orders", {
-            params: {
-                pageNumber: page,
-                pagination: sizePerPage,
-            },
-            withCredentials: true,
-        })
-            .then(res => {
-                setOrders(res.data.success.payload.orders)
-                setTotalSize(res.data.success.payload.totalSize)
+        setIsDataFetching(true)
+        try {
+            const res = await axios.get("/api/user/orders", {
+                params: {
+                    pageNumber: page,
+                    pagination: sizePerPage,
+                },
+                withCredentials: true,
             })
-            .catch(error => {
-                if (error.response) {
-                    console.error(error.response.data)
-                }
-            })
+            setOrders(res.data.success.payload.orders)
+            setTotalSize(res.data.success.payload.totalSize)
+        } catch(e) {
+            console.error(e)
+        }
+        setIsDataFetching(false)
     }
 
     async function fetchUser() {
-        axios.get("/api/user/account").then(res => {
+        setIsUserFetching(true)
+        try {
+            const res = await axios.get("/api/user/account")
             setUserAccount(res.data.success.payload.user)
-        }).catch(err => {
-            console.log(err.response.data)
-        })
+        }catch(e){
+                console.error(e)
+        }
+        setIsUserFetching(false)
+
     }
 
     const removeHandler = () => {
@@ -120,11 +126,6 @@ const Account = ({user}) => {
     }, [page, sizePerPage])
 
 
-    if (!user || user.isLoggedIn === false) {
-        return <MainWrapper>loading...</MainWrapper>
-    }
-
-
     return (
         <MainWrapper>
             <Container className={"p-4"} fluid>
@@ -132,36 +133,51 @@ const Account = ({user}) => {
                     <Col md={4} className={"pb-3"}>
                         <Container fluid>
                             <Card>
-                                <Card.Header
-                                    as={"h1"}>
-                                    <div className={"d-flex justify-content-between"}>
-                                        {userAccount?.secondName} {userAccount?.firstName} {userAccount?.patronymicName}
-                                        <QuestionHelp
-                                            message={"Это ваши данные, вы можете изменить их, при желании."}/>
-                                    </div>
-                                </Card.Header>
-                                <ListGroup variant="flush">
-                                    <ListGroup.Item>E-mail: {userAccount?.email} </ListGroup.Item>
-                                    <ListGroup.Item>Телефон: {userAccount?.phoneNumber}</ListGroup.Item>
-                                    <ListGroup.Item>
-                                        <div className="d-flex">
-                                            <span> Вы можете поменять свои данные &nbsp;</span>
-                                            <Link href={"/account/edit"}>
-                                                <a className={"link"}>здесь</a>
-                                            </Link>.
+                                {
+                                    isUserFetching
+                                        ?
+                                        <div className={"d-flex justify-content-center p-5"}>
+                                            <Spinner animation="border" role="status">
+                                                <span className="sr-only">Loading...</span>
+                                            </Spinner>
                                         </div>
-                                    </ListGroup.Item>
-                                    <ListGroup.Item className={"d-flex flex-column"}>
-                                        <h4>Хотите поменять пароль?</h4>
-                                        <div className="d-flex">
-                                            <span>Вы можете сделать это &nbsp;</span>
-                                            <Link href={"/password-reset"}>
-                                                <a className={"link"}> здесь</a>
-                                            </Link>.
-                                        </div>
+                                        :
+                                        <>
+                                            <Card.Header
+                                                as={"h1"}
+                                                style={{wordBreak: "break-all"}}
+                                            >
+                                                <div className={"d-flex justify-content-between"}>
+                                                    {userAccount?.secondName} {userAccount?.firstName} {userAccount?.patronymicName}
+                                                    <QuestionHelp
+                                                        message={"Это ваши данные, вы можете изменить их, при желании."}/>
+                                                </div>
+                                            </Card.Header>
+                                            <ListGroup variant="flush">
+                                                <ListGroup.Item>E-mail: {userAccount?.email} </ListGroup.Item>
+                                                <ListGroup.Item>Телефон: {userAccount?.phoneNumber}</ListGroup.Item>
+                                                <ListGroup.Item>
+                                                    <div className="d-flex">
+                                                        <span> Вы можете поменять свои данные &nbsp;</span>
+                                                        <Link href={"/account/edit"}>
+                                                            <a className={"link"}>здесь</a>
+                                                        </Link>.
+                                                    </div>
+                                                </ListGroup.Item>
+                                                <ListGroup.Item className={"d-flex flex-column"}>
+                                                    <h4>Хотите поменять пароль?</h4>
+                                                    <div className="d-flex">
+                                                        <span>Вы можете сделать это &nbsp;</span>
+                                                        <Link href={"/password-reset"}>
+                                                            <a className={"link"}> здесь</a>
+                                                        </Link>.
+                                                    </div>
 
-                                    </ListGroup.Item>
-                                </ListGroup>
+                                                </ListGroup.Item>
+                                            </ListGroup>
+                                        </>
+                                }
+
                             </Card>
                         </Container>
                     </Col>
@@ -172,7 +188,7 @@ const Account = ({user}) => {
                                     <div className={"d-flex justify-content-between"}>
                                         Ваши заказы
                                         <QuestionHelp
-                                            message={"В этой таблице будут  отображаться ваши текущие заказы."}/>
+                                            message={"В этой таблице будут отображаться ваши текущие заказы."}/>
                                     </div>
                                 </Card.Header>
                                 <ListGroup variant="flush">
@@ -192,33 +208,43 @@ const Account = ({user}) => {
                                 </Row>
 
                                 <div className="pb-3 px-3">
-                                    <BootstrapTable
-                                        remote
-                                        keyField='_id'
-                                        bodyClasses={'defis'}
-                                        data={orders}
-                                        columns={columns}
-                                        ref={n => setNode(n)}
-                                        selectRow={
-                                            {
-                                                mode: 'checkbox',
-                                            }
-                                        }
-                                        rowEvents={rowEvents}
-                                        overlay={overlayFactory({
-                                            spinner: true,
-                                            styles: {
-                                                overlay: (base) => ({
-                                                    ...base,
-                                                    background: 'rgba(206,206,206,0.5)'
-                                                })
-                                            }
-                                        })}
-                                        filter={filterFactory()}
-                                        pagination={paginationFactory({page, sizePerPage, totalSize})}
-                                        onTableChange={handleTableChange}
-                                        noDataIndication={() => <NoDataIndication/>}
-                                    />
+                                    {
+                                        isDataFetching ?
+                                            <div className={"d-flex justify-content-center p-5"}>
+                                                <Spinner animation="border" role="status">
+                                                    <span className="sr-only">Loading...</span>
+                                                </Spinner>
+                                            </div>
+                                            :
+                                            <BootstrapTable
+                                                remote
+                                                keyField='_id'
+                                                bodyClasses={'defis'}
+                                                data={orders}
+                                                columns={columns}
+                                                ref={n => setNode(n)}
+                                                selectRow={
+                                                    {
+                                                        mode: 'checkbox',
+                                                    }
+                                                }
+                                                rowEvents={rowEvents}
+                                                overlay={overlayFactory({
+                                                    spinner: true,
+                                                    styles: {
+                                                        overlay: (base) => ({
+                                                            ...base,
+                                                            background: 'rgba(206,206,206,0.5)'
+                                                        })
+                                                    }
+                                                })}
+                                                filter={filterFactory()}
+                                                pagination={paginationFactory({page, sizePerPage, totalSize})}
+                                                onTableChange={handleTableChange}
+                                                noDataIndication={() => <NoDataIndication/>}
+                                            />
+                                    }
+
                                 </div>
                             </Card>
                         </Container>

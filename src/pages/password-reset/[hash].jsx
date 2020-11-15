@@ -73,6 +73,7 @@ const PasswordResetHash = () => {
                             aria-label="newPassword"
                             name="newPassword"
                             style={{textAlign: "center"}}
+                            maxLength={"250"}
                             placeholder={"Новый пароль"}
                             ref={register(
                                 {
@@ -89,6 +90,7 @@ const PasswordResetHash = () => {
                         <FormControl
                             as={"input"}
                             placeholder={"Подтверждение"}
+                            maxLength={"250"}
                             style={{textAlign: "center"}}
                             ref={register(
                                 {

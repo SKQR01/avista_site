@@ -33,13 +33,16 @@ const SignIn = ({router}) => {
             .catch((err) => {
                 const errors = err.response && err.response.data.errors
                 let message
-                if (errors?.length) {
-                    message = err?.response?.data?.errors[0].message
-                } else {
-                    message = err?.response?.data?.errors?.message
-                }
+                if(errors){
+                    if (errors?.length) {
+                        message = errors[0].message
+                    } else {
 
-                console.log(err.response?.data?.errors[0])
+                        message = errors.message && "Что-то пошло не так."
+                    }
+                }
+                console.error(errors)
+
                 message && setCommonErrorMessage(message)
                 setCommonErrorMessage(message)
             })
@@ -73,6 +76,7 @@ const SignIn = ({router}) => {
                                     {errors.name && errors.name.type === "required" && <span>This is required</span>}
                                     <ErrorMessage errors={errors} name={"email"}/>
                                     <FormControl
+                                        maxLength={"250"}
                                         placeholder={"Email"}
                                         aria-label="email"
                                         aria-describedby="email"
@@ -84,6 +88,7 @@ const SignIn = ({router}) => {
                                 <div className={"pb-4"}>
                                     <ErrorMessage errors={errors} name={"password"}/>
                                     <FormControl
+                                        maxLength={"250"}
                                         aria-label="Password"
                                         aria-describedby="basic-addon1"
                                         name="password"

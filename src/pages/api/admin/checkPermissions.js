@@ -2,13 +2,13 @@
 
 import apiRoutesHandler from "@utils/apiRoutesHandler"
 import withDb from "@utils/dbConnect"
-import User from "./../../../models/User"
+import User from "@models/User"
 
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication} from "@utils/callbackHandlerApiFunctions"
 
 export default apiRoutesHandler(
-    withDb({
+    {
         GET: callbackHandlerApi([checkAuthentication], async (req, res, session) => {
             try {
                 const user = await User.findById(session.userId).populate({path:"permissions", model:Permission})
@@ -24,6 +24,6 @@ export default apiRoutesHandler(
                 res.status(500).json({errors: [{name: 'common', message: e.message}]})
             }
         })
-    })
+    }
 )
 
