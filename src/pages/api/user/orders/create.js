@@ -3,6 +3,7 @@ import apiRoutesHandler from "@utils/apiRoutesHandler"
 import Order from '@models/Order'
 import OrderStatus from "@models/OrderStatus"
 import User from "@models/User"
+import UserBusinessStatus from "@models/UserBusinessStatus"
 import {sendNewAccountPasswordToUser} from "@utils/mailer"
 
 import generatePassword from "password-generator"
@@ -13,6 +14,7 @@ import {orderSchemaValidation} from "@validation/schemes"
 import withSession from "@utils/withSession"
 
 import config from "@root/config"
+import bot, {sendOrderToChat} from "@utils/telegramMsg";
 
 
 export default apiRoutesHandler(
@@ -23,7 +25,7 @@ export default apiRoutesHandler(
                 if(potentialErrors.length !== 0) return res.status(422).json({errors:potentialErrors})
                 const session = req.session.get("authToken")
                 if (session) {
-                    const user = await User.findById(session.userId)
+                    const user = await User.findById(session.userId).populate({path:"businessStatus", model:UserBusinessStatus})
                     if (user) {
                         const defaultStatus = await OrderStatus.findOne(config.orderStatuses.notAccepted).lean()
                         const newOrder = await Order.create({...req.body, user: user.id, status: defaultStatus._id})
@@ -34,6 +36,7 @@ export default apiRoutesHandler(
                                 return dbErrorCompile(err, res)
                             }
                         })
+                        await sendOrderToChat({user:user, businessStatus:user.businessStatus, messageTitle:newOrder.title, messageContent:newOrder.description})
                         res.status(200).json({success: {name: "common", message: "Заказ успешно оформлен."}})
                     } else {
                         return res.status(403).json({
@@ -47,6 +50,15 @@ export default apiRoutesHandler(
                     const requestUserData = req.body.user
                     const newPassword = generatePassword(15, false)
 
+                    const businessStatus = await UserBusinessStatus.findById(requestUserData.businessStatus)
+                    if(!businessStatus){
+                        return res.status(400).json({
+                            errors: {
+                                name: 'businessStatus',
+                                message: 'Не найдено указанного статуса.'
+                            }
+                        })
+                    }
                     const newUser = new User({...requestUserData, password: newPassword})
 
                     const defaultStatus = await OrderStatus.findOne(config.orderStatuses.notAccepted).lean()
@@ -62,6 +74,7 @@ export default apiRoutesHandler(
                                 user.orders.addToSet(newOrder.id)
                                 await newOrder.save()
                                 await sendNewAccountPasswordToUser(requestUserData.email, newPassword)
+                                await sendOrderToChat({user:user, businessStatus: businessStatus, messageTitle:newOrder.title, messageContent:newOrder.description})
                                 return res.json({success: {name: 'common', message: 'Ваш заказ успешно оформлен.'}})
                             } catch (e) {
                                 return res.status(400).json({
@@ -73,8 +86,6 @@ export default apiRoutesHandler(
                             }
                         }
                     })
-
-
 
                 }
             } catch (e) {

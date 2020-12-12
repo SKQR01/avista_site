@@ -59,8 +59,7 @@ const MainNavbar = () => {
                         <Navbar.Brand className={"navbar-logo"}>
                             <div className={"d-flex align-items-center"}>
                                 <img src={franchRed} alt={"1C franchise logo"} className="mr-2 navbar-logo__image"/>
-                                <img src={avista} alt={"avista logo"} className="mr-2 navbar-logo__image"/>
-                                Ависта 1C
+                                ИТЕА
                             </div>
 
 
@@ -72,24 +71,33 @@ const MainNavbar = () => {
                 <Navbar.Collapse id="responsive-navbar-nav " className="justify-content-end">
                     <Container>
                         <Nav className={"w-100 justify-content-md-end main-navbar"}>
-                            <Nav.Item>
-                                <Link href={"/company"}>
-                                    <Nav.Link href={"/company"} className={"main-navbar__item"}>
-                                        О компании
-                                    </Nav.Link>
-                                </Link>
-                            </Nav.Item>
+                            {/*<NavDropdown title="О компании" id="account"*/}
+                            {/*             className={"text-center justify-content-center"}*/}
+                            {/*>*/}
+                            {/*    <NavDropdown.Item eventKey="company"*/}
+                            {/*                      onClick={() => router.push("/company")}>*/}
+                            {/*        <a>*/}
+                            {/*            Описание*/}
+                            {/*        </a>*/}
+                            {/*    </NavDropdown.Item>*/}
+                            {/*    <NavDropdown.Item eventKey="requisites"*/}
+                            {/*                      onClick={() => router.push("/company/requisites")}>*/}
+                            {/*        <a>*/}
+                            {/*            Реквизиты*/}
+                            {/*        </a>*/}
+                            {/*    </NavDropdown.Item>*/}
+                            {/*</NavDropdown>*/}
                             <Nav.Item>
                                 <Link href={"/service"}>
                                     <Nav.Link href={"/service"} className={"main-navbar__item"}>
-                                        Об услугах
+                                        Услуги
                                     </Nav.Link>
                                 </Link>
                             </Nav.Item>
                             <Nav.Item>
                                 <Link href={"/products"}>
                                     <Nav.Link href={"/products"} className={"main-navbar__item "}>
-                                        О товарах
+                                        Товары
                                     </Nav.Link>
                                 </Link>
                             </Nav.Item>

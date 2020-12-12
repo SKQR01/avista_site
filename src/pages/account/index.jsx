@@ -223,6 +223,8 @@ const Account = () => {
                                                 data={orders}
                                                 columns={columns}
                                                 ref={n => setNode(n)}
+                                                hover
+                                                rowStyle={{cursor:"pointer"}}
                                                 selectRow={
                                                     {
                                                         mode: 'checkbox',

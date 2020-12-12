@@ -1,6 +1,7 @@
-import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
-import Order from './../../../../models/Order'
+import Order from '@models/Order'
+import OrderStatus from '@models/OrderStatus'
+import User from '@models/User'
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerApiFunctions"
 import validateData, {isNubmer, isPresentInObject} from "@validation/validator";
@@ -36,12 +37,12 @@ export default apiRoutesHandler(
                     if(!req.query.search){
                         // const orders = await Order.find(filterParameter).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
                         const totalSize = await Order.find(filterParameter).countDocuments()
-                        const orders = await Order.find(filterParameter).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
+                        const orders = await Order.find(filterParameter).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:OrderStatus}).populate({path:"user", model:User}).lean()
 
                         return res.json({success: {name: "common", payload: {orders:orders, totalSize:totalSize}}})
                     }
 
-                    const orders = await Order.find({$text: {$search: req.query.search}}).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:"OrderStatus"}).populate({path:"user", model:"User"}).lean()
+                    const orders = await Order.find({$text: {$search: req.query.search}}).skip((pageNumber - 1) * pagination).limit(pagination).sort(sortParameter).populate({path:"status", model:OrderStatus}).populate({path:"user", model:User}).lean()
                     const totalSize = orders.length
 
 

@@ -37,6 +37,18 @@ const Service = () => {
             <MainWrapper>
                 <div className={"mx-lg-5"}>
                     <Container className={"p-5"} fluid>
+                        <Container fluid className={"pb-4"}>
+                            <Row className={"d-flex align-items-center py-4"}>
+                                <Col sm={4} className={"p-2 text-end align-items-center"}>
+                                    <h2>Заказать наши услуги:</h2>
+                                </Col>
+                                <Col sm={4}>
+                                    <Link href={"/ordersForm"}><a className={"link"}><h4>перейти в форму заказа</h4>
+                                    </a></Link>
+                                </Col>
+                            </Row>
+                        </Container>
+                        <hr/>
                         <div className={"py-5"}>
                             <Row>
                                 <Col sm={6} md={4} className={"p-2 text-center"}>
@@ -72,8 +84,6 @@ const Service = () => {
                                             переосмысления внешнеэкономических политик.</p>
                                     </div>
                                 </Col>
-                            </Row>
-                            <Row>
                                 <Col sm={6} md={4} className={"p-2 text-center"}>
                                     <div className={"p-3 p-lg-5"}>
                                         <img src={Finalize} className={"small-content-image"}/>
@@ -107,66 +117,55 @@ const Service = () => {
                                             внедрения и модернизации благоприятных перспектив.</p>
                                     </div>
                                 </Col>
-                            </Row>
-                            <Row className={"justify-content-center"}>
                                 <Col sm={6} md={4} className={"p-2 text-center"}>
-                                    <div className={"p-3 p-lg-5"}>
-                                        <img src={Buh} className={"small-content-image"}/>
-                                    </div>
+                                        <div className={"p-3 p-lg-5"}>
+                                            <img src={Buh} className={"small-content-image"}/>
+                                        </div>
 
-                                    <div className={"d-flex flex-column"}>
-                                        <h4>Бухучёт</h4>
-                                        <p>Также как укрепление и развитие внутренней структуры влечет за собой процесс
-                                            внедрения и модернизации благоприятных перспектив.</p>
-                                    </div>
+                                        <div className={"d-flex flex-column"}>
+                                            <h4>Бухучёт</h4>
+                                            <p>Также как укрепление и развитие внутренней структуры влечет за собой процесс
+                                                внедрения и модернизации благоприятных перспектив.</p>
+                                        </div>
                                 </Col>
                             </Row>
                         </div>
 
 
 
-                        <hr/>
 
-                        <Row className={"py-5"}>
-                            <Col sm={6} className={"d-flex align-items-center"}>
-                                <div className={"text-sm-center text-md-right p-3 pb-4"}>
-                                    <h3>Продажа и настройка программных продуктов 1С</h3>
-                                    <p>Список которых вы можете посмотреть <Link href={"/products"}><a
-                                        className={"link"}>здесь</a></Link>.</p>
-                                </div>
-                            </Col>
-                            <Col sm={6}>
-                                <div className={"d-flex w-100 h-100 justify-content-center align-center"}>
-                                    <img src={cProduct} className={"big-content-image"}/>
-                                </div>
-                            </Col>
-                        </Row>
 
-                        <hr/>
-                        <Row className={"py-5"}>
-                            <Col sm={6}>
-                                <div className={"pb-5 p-2 text-center w-100"}>
-                                    <img src={Protect} className={"big-content-image"}/>
-                                </div>
-                            </Col>
-                            <Col sm={6} className={"pb-5 d-flex align-items-center "}>
-                                <div className={"text-sm-center text-md-left w-100"}>
-                                    <h3>Продажа антивирусных и программных продуктов делового назначения</h3>
-                                </div>
-                            </Col>
-                        </Row>
-                        <hr/>
-                        <Container fluid className={"pb-4"}>
-                            <Row className={"d-flex align-items-center py-4"}>
-                                <Col sm={4} className={"p-2 text-end align-items-center"}>
-                                    <h2>Заказать наши услуги:</h2>
-                                </Col>
-                                <Col sm={4}>
-                                    <Link href={"/ordersForm"}><a className={"link"}><h4>перейти в форму заказа</h4>
-                                    </a></Link>
-                                </Col>
-                            </Row>
-                        </Container>
+                        {/*<Row className={"py-5"}>*/}
+                        {/*    <Col sm={6} className={"d-flex align-items-center"}>*/}
+                        {/*        <div className={"text-sm-center text-md-right p-3 pb-4"}>*/}
+                        {/*            <h3>Продажа и настройка программных продуктов 1С</h3>*/}
+                        {/*            <p>Список которых вы можете посмотреть <Link href={"/products"}><a*/}
+                        {/*                className={"link"}>здесь</a></Link>.</p>*/}
+                        {/*        </div>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col sm={6}>*/}
+                        {/*        <div className={"d-flex w-100 h-100 justify-content-center align-center"}>*/}
+                        {/*            <img src={cProduct} className={"big-content-image"}/>*/}
+                        {/*        </div>*/}
+                        {/*    </Col>*/}
+                        {/*</Row>*/}
+
+                        {/*<hr/>*/}
+                        {/*<Row className={"py-5"}>*/}
+                        {/*    <Col sm={6}>*/}
+                        {/*        <div className={"pb-5 p-2 text-center w-100"}>*/}
+                        {/*            <img src={Protect} className={"big-content-image"}/>*/}
+                        {/*        </div>*/}
+                        {/*    </Col>*/}
+                        {/*    <Col sm={6} className={"pb-5 d-flex align-items-center "}>*/}
+
+                        {/*        <div className={"text-sm-center text-md-left w-100"}>*/}
+                        {/*            <h3>Продажа антивирусных и программных продуктов делового назначения</h3>*/}
+                        {/*        </div>*/}
+                        {/*    </Col>*/}
+                        {/*</Row>*/}
+                        {/*<hr/>*/}
+
                     </Container>
                 </div>
 

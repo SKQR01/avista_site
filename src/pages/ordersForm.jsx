@@ -107,6 +107,39 @@ const OrdersForm = ({cookie}) => {
                             </Container>
                             {!cookie &&
                             <Container fluid className={"pb-4"}>
+                                <ErrorMessage errors={errors} name={"user.businessStatus"}/>
+                                <div className={"pb-3"}>
+                                    <b>Ваш статус:</b>
+                                    {statuses?.map(status => {
+                                        return(
+                                            <FormCheck type="radio" aria-label="ИНН"
+                                                       name={"user.businessStatus"}
+                                                       maxLength={"250"}
+                                                       key={status._id}
+                                                       value={status._id}
+                                                       ref={register({required: "Выберите ваш статус."})}
+                                                       label={status.title}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                                <ErrorMessage errors={errors} name={"user.ITN"}/>
+                                <div className={"pb-3"}>
+                                    <FormControl as="input" aria-label="ИНН"
+                                                 name={"user.ITN"}
+                                                 maxLength={"250"}
+                                                 placeholder={"ИНН"}
+                                                 ref={register({
+                                                     required: "Введите ваш ИНН.",
+                                                     pattern: {
+                                                         value:itnRegexp,
+                                                         message:"Введённое значение не является ИНН."
+                                                     }
+                                                 })
+                                                 }
+
+                                    />
+                                </div>
                                 <h3 className={"pb-3"}>Кто вы?</h3>
 
                                 <ErrorMessage errors={errors} name={"user.secondName"}/>
@@ -156,39 +189,8 @@ const OrdersForm = ({cookie}) => {
                                                  placeholder={"Email"}
                                                  ref={register({required: "Введите вашу почту (это необходимо, чтобы связаться с вами)."})}/>
                                 </div>
-                                <ErrorMessage errors={errors} name={"user.ITN"}/>
-                                <div className={"pb-3"}>
-                                    <FormControl as="input" aria-label="ИНН"
-                                                 name={"user.ITN"}
-                                                 maxLength={"250"}
-                                                 placeholder={"ИНН"}
-                                                 ref={register({
-                                                     required: "Введите ваш ИНН.",
-                                                     pattern: {
-                                                         value:itnRegexp,
-                                                         message:"Введённое значение не является ИНН."
-                                                     }
-                                                 })
-                                                 }
 
-                                    />
-                                </div>
-                                <ErrorMessage errors={errors} name={"user.businessStatus"}/>
-                                <div className={"pb-3"}>
-                                    <b>Ваш статус:</b>
-                                    {statuses?.map(status => {
-                                        return(
-                                            <FormCheck type="radio" aria-label="ИНН"
-                                                       name={"user.businessStatus"}
-                                                       maxLength={"250"}
-                                                       key={status._id}
-                                                       value={status._id}
-                                                       ref={register({required: "Выберите ваш статус."})}
-                                                       label={status.title}
-                                            />
-                                        )
-                                    })}
-                                </div>
+
 
                             </Container>
                             }

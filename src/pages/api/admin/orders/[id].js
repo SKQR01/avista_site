@@ -2,7 +2,10 @@ import withDb from "@utils/dbConnect"
 import apiRoutesHandler from "@utils/apiRoutesHandler"
 import callbackHandlerApi from "@utils/callbackHandlerApi"
 import {checkAuthentication, checkAdminPermission} from "@utils/callbackHandlerApiFunctions"
-import Order from './../../../../models/Order'
+
+import Order from '@models/Order'
+import User from '@models/User'
+import OrderStatus from '@models/OrderStatus'
 
 import validateData, {isEmail, isNubmer, isPhoneNubmer} from "@validation/validator"
 import {orderSchemaValidation} from "@validation/schemes";
@@ -37,7 +40,7 @@ export default apiRoutesHandler(
                 if(potentialValidationErrors.length !== 0) return res.status(422).json({errors:potentialValidationErrors})
 
 
-                const order = await Order.findByIdAndUpdate(req.query.id, data, {new:true}).populate("user status").lean()
+                const order = await Order.findByIdAndUpdate(req.query.id, data, {new:true}).populate({path:"user", model:User}).populate({path:"status", model:OrderStatus}).lean()
                 res.json({success: {name: 'common', payload: {order: order}, message:"Данные успешно изменены."}})
             } catch (e) {
                 res.status(500).json({errors: [{name: 'common', message: e.message}]})

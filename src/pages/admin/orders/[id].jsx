@@ -58,7 +58,7 @@ const UserOrder = () => {
         axios.put(`/api/admin/orders/${order._id}`, {...data}, {withCredentials: true})
             .then((res) => setCommonSuccessMessage(res.data.success.message))
             .catch(err => {
-                const error = err.response.data.errors[0].message
+                const error = err.response?.data?.errors[0].message || "Что-то пошло не так."
                 setCommonErrorMessage(error)
             })
     }

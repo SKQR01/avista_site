@@ -31,7 +31,7 @@ export default function Home() {
                     <Row className={"pb-4"}>
                         <Col sm={6} className={"d-flex align-items-center"}>
                             <div>
-                                <h1>Ависта 1С</h1>
+                                <h1>ИТЕА</h1>
                                 <h3>Программные и бухгалтерские решения для вашего бизнеса.</h3>
                             </div>
                         </Col>
